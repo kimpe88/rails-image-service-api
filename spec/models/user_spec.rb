@@ -4,7 +4,7 @@ RSpec.describe User, type: :model do
   before :each do
     @user = FactoryGirl.build(:user)
   end
-  it 'should required details all to be set on creation' do
+  it 'should require details all to be set on creation' do
     expect{ @user.save! }.to_not raise_error
   end
 
@@ -18,9 +18,26 @@ RSpec.describe User, type: :model do
     expect { @user.save! }.to raise_error
   end
 
-  it 'should require date to be a valid date format' do
-    @user.birthdate= Faker::Date.forward(30)
-    expect { @user.save! }.to raise_error
+  it 'should require unique usernames' do
+    @user.save!
+    user2 = FactoryGirl.build(:user,username: @user.username)
+    expect { user2.save! }.to raise_error
   end
 
+  it 'should require unique emails' do
+    @user.save!
+    user2 = FactoryGirl.build(:user,email: @user.email)
+    expect { user2.save! }.to raise_error
+  end
+
+  describe 'authentication' do
+    it 'should return a unique token when successful' do
+      pending
+    end
+
+    it 'should return nil when unsuccessful' do
+      pending
+    end
+
+  end
 end
