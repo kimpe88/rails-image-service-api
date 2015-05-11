@@ -29,11 +29,12 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 
-  # Testing gems
   gem 'rspec-rails', '~> 3.2.1'
   gem 'guard'
   gem 'guard-rspec'
   gem 'guard-livereload'
   gem 'guard-test'
+  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'faker', '~> 1.4.3'
 end
 
