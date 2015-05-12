@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :tag do
-    text "MyString"
+    text Faker::Lorem.word
   end
 
 end

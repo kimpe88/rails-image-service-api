@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150512151019) do
+ActiveRecord::Schema.define(version: 20150512192033) do
 
   create_table "posts", force: :cascade do |t|
     t.string   "image",       limit: 255
@@ -35,11 +35,8 @@ ActiveRecord::Schema.define(version: 20150512151019) do
   end
 
   create_table "user_tags", force: :cascade do |t|
-    t.string   "text",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "user_id",    limit: 4
-    t.integer  "post_id",    limit: 4
+    t.integer "post_id", limit: 4
+    t.integer "user_id", limit: 4
   end
 
   add_index "user_tags", ["post_id"], name: "index_user_tags_on_post_id", using: :btree

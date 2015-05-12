@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :post do
-    image "MyString"
-description "MyText"
+    image Faker::Avatar.image
+    description Faker::Lorem.sentence
   end
 
 end

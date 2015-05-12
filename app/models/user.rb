@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }
 
   has_many :user_tags
+  has_many :posts, through: :user_tags
 
   #TODO implement encrypted passwords
   def self.hash_password(password)
