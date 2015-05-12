@@ -4,7 +4,10 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }
 
   has_many :user_tags
-  has_many :posts, through: :user_tags
+  has_many :posts
+  has_many :tagged_posts, through: :user_tags, class_name: 'Post', source: :post
+
+  attr_accessor :following, :followers
 
   #TODO implement encrypted passwords
   def self.hash_password(password)
@@ -23,5 +26,13 @@ class User < ActiveRecord::Base
       user.save!
       token
     end
+  end
+
+  #TODO Implement count following and followers when associations are done
+  # Better way of doing this??
+  def count_and_set_following_and_followers
+    @following = 0
+    @followers = 0
+    {following: @following, followers: @followers}
   end
 end

@@ -22,7 +22,8 @@ class UsersController < ApplicationController
   def show
     begin
       user = User.find(params.require(:id))
-      render json: user, status: :ok
+      user.count_and_set_following_and_followers
+      render json: user, except: [:password, :token], include: :posts, methods: [:following, :followers] , status: :ok
     rescue ActiveRecord::RecordNotFound
       head :not_found
     end
