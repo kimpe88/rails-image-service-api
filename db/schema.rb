@@ -11,7 +11,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150511212619) do
+ActiveRecord::Schema.define(version: 20150512151019) do
+
+  create_table "posts", force: :cascade do |t|
+    t.string   "image",       limit: 255
+    t.text     "description", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "posts_tags", force: :cascade do |t|
+    t.integer "post_id", limit: 4
+    t.integer "tag_id",  limit: 4
+  end
+
+  add_index "posts_tags", ["post_id"], name: "index_posts_tags_on_post_id", using: :btree
+  add_index "posts_tags", ["tag_id"], name: "index_posts_tags_on_tag_id", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "text",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "user_tags", force: :cascade do |t|
+    t.string   "text",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "user_id",    limit: 4
+    t.integer  "post_id",    limit: 4
+  end
+
+  add_index "user_tags", ["post_id"], name: "index_user_tags_on_post_id", using: :btree
+  add_index "user_tags", ["user_id"], name: "index_user_tags_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",    limit: 255

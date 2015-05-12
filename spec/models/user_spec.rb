@@ -32,12 +32,17 @@ RSpec.describe User, type: :model do
 
   describe 'authentication' do
     it 'should return a unique token when successful' do
-      pending
+      @user.save
+      token = User.authenticate(@user.username, @user.password)
+      expect(User.where(token: token).count).to be 1
     end
 
     it 'should return nil when unsuccessful' do
-      pending
+      @user.save
+      token = User.authenticate("fake_user", @user.password)
+      expect(token).to be nil
+      token = User.authenticate(@user.username, "fake_password")
+      expect(token).to be nil
     end
-
   end
 end

@@ -18,6 +18,16 @@ class UsersController < ApplicationController
     end
   end
 
+  # TODO should this also show posts, comments made by this user??
+  def show
+    begin
+      user = User.find(params.require(:id))
+      render json: user, status: :ok
+    rescue ActiveRecord::RecordNotFound
+      head :not_found
+    end
+  end
+
   private
   def login_params
     params.require(:user).permit(:username, :password)

@@ -50,22 +50,38 @@ RSpec.describe UsersController, type: :request do
     before :each do
       @user = FactoryGirl.create(:user)
     end
-   it 'should login sucessfully with correct details' do
-     post '/user/login', user: {username: @user.username, password: @user.password}
-     expect(response.status).to eq(200)
-     expect(response.body).to eq(User.find(@user.id).token)
-   end
+    it 'should login sucessfully with correct details' do
+      post '/user/login', user: {username: @user.username, password: @user.password}
+      expect(response.status).to be 200
+      expect(response.body).to eq(User.find(@user.id).token)
+    end
 
-   it 'should fail to login with invalid username' do
-     post '/user/login', user: {username: 'wrong_user', password: @user.password}
-     expect(response.status).to eq(401)
-   end
+    it 'should fail to login with invalid username' do
+      post '/user/login', user: {username: 'wrong_user', password: @user.password}
+      expect(response.status).to be 401
+    end
 
-   it 'should fail to login with wrong password' do
-     post '/user/login', user: {username: @user.username, password: 'wrong_password'}
-     expect(response.status).to eq(401)
-   end
+    it 'should fail to login with wrong password' do
+      post '/user/login', user: {username: @user.username, password: 'wrong_password'}
+      expect(response.status).to be 401
+    end
+  end
 
+  describe 'user information' do
+    before :each do
+      @user = FactoryGirl.create(:user)
+    end
+    it 'should return status 404 when getting a user id that does not exist' do
+      get '/user/1'
+      expect(response.status).to be 404
+    end
+
+    it 'it should return details of user with valid id' do
+      #TODO There should be a better way to do this
+      get "/user/#{@user.id}"
+      expect(response.status).to be 200
+      expect(JSON.parse(response.body)["id"]).to be @user.id
+    end
   end
 
 end
