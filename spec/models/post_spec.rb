@@ -7,7 +7,7 @@ RSpec.describe Post, type: :model do
     @post = FactoryGirl.build(:post)
   end
   it 'should correctly save posts and associations with the create post method' do
-    expect(Post.create_post(@post, @tag, @user)).to be true
+    expect(Post.create_post(@post, [@tag], [@user])).to be true
     post = Post.find(@post.id)
     expect(post.tags.size).to be 1
     expect(post.tagged_users.size).to be 1

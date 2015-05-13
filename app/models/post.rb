@@ -6,6 +6,8 @@ class Post < ActiveRecord::Base
   has_many :user_tags
   has_many :tagged_users, through: :user_tags, class_name: 'User', source: :user
 
+  mount_base64_uploader :image, ImageUploader
+
 
   # Make sure to always setup associantions before saving the post to
   # the database

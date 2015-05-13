@@ -36,3 +36,5 @@ bower.json
 
 *.swp
 *.swo
+
+/public/uploads
