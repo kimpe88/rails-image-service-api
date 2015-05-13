@@ -53,16 +53,22 @@ RSpec.describe UsersController, type: :request do
     it 'should login sucessfully with correct details' do
       post '/user/login', user: {username: @user.username, password: @user.password}
       expect(response.status).to be 200
-      expect(response.body).to eq(User.find(@user.id).token)
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be true
+      expect(json_response['result']).to eq(User.find(@user.id).token)
     end
 
     it 'should fail to login with invalid username' do
       post '/user/login', user: {username: 'wrong_user', password: @user.password}
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be false
       expect(response.status).to be 401
     end
 
     it 'should fail to login with wrong password' do
       post '/user/login', user: {username: @user.username, password: 'wrong_password'}
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be false
       expect(response.status).to be 401
     end
   end
@@ -72,7 +78,12 @@ RSpec.describe UsersController, type: :request do
       @user = FactoryGirl.create(:user)
     end
     it 'should return status 404 when getting a user id that does not exist' do
-      get '/user/1'
+      begin
+        id = rand(1..1000)
+      end until id != @user.id
+      get "/user/#{id}"
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be false
       expect(response.status).to be 404
     end
 
@@ -80,8 +91,54 @@ RSpec.describe UsersController, type: :request do
       #TODO There should be a better way to do this
       get "/user/#{@user.id}"
       expect(response.status).to be 200
-      expect(JSON.parse(response.body)["id"]).to be @user.id
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be true
+      expect(json_response['result']["id"]).to be @user.id
+    end
+
+    describe 'multiple users' do
+      before :each do
+        @users = [@user]
+        4.times do
+          @users << FactoryGirl.create(:user)
+        end
+      end
+
+      it 'should find all users with offset no and no limit' do
+        get '/users', {offset: 0}
+        json_response =  JSON.parse(response.body)
+        expect(json_response['success']).to be true
+        expect(json_response['offset']).to be 0
+        expect(json_response['limit']).to be 10
+        expect(json_response['result'].length).to be 5
+      end
+
+      it 'should limit responses correctly' do
+        get '/users', {offset: 0, limit: 2}
+        json_response =  JSON.parse(response.body)
+        expect(json_response['success']).to be true
+        expect(json_response['offset']).to be 0
+        expect(json_response['limit']).to be 2
+        expect(json_response['result'].length).to be 2
+      end
+
+      it 'should give correct results with offset' do
+        get '/users', {offset: 2}
+        json_response =  JSON.parse(response.body)
+        expect(json_response['success']).to be true
+        expect(json_response['offset']).to be 2
+        expect(json_response['limit']).to be 10
+        expect(json_response['result'].length).to be 3
+      end
+
+      it 'should limit to 100 when using too large limit' do
+        get '/users', {offset: 0, limit: 1000}
+        json_response =  JSON.parse(response.body)
+        expect(json_response['success']).to be true
+        expect(json_response['offset']).to be 0
+        expect(json_response['limit']).to be 100
+        expect(json_response['result'].length).to be 5
+      end
     end
   end
-
 end

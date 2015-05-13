@@ -28,6 +28,13 @@ class User < ActiveRecord::Base
     end
   end
 
+
+  def as_json(options)
+    count_and_set_following_and_followers
+    super(except: [:password, :token], include: :posts, methods: [:following, :followers])
+  end
+
+  private
   #TODO Implement count following and followers when associations are done
   # Better way of doing this??
   def count_and_set_following_and_followers

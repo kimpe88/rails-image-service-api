@@ -2,9 +2,11 @@ class UsersController < ApplicationController
   def sign_up
     user = User.new(signup_params)
     if user.save
-      head :created
+      response = {success: true}
+      render json: response, status: :created
     else
-      head :internal_server_error
+      response = {success: false}
+      render json: response, status: :internal_server_error
     end
   end
 
@@ -12,21 +14,34 @@ class UsersController < ApplicationController
     params =  login_params
     token = User.authenticate(params['username'], params['password'])
     if token
-      render json: token, status: :ok
+      response = {success: true, result: token}
+      render json: response, status: :ok
     else
-      head :unauthorized
+      response = {success: false}
+      render json: response, status: :unauthorized
     end
   end
 
-  # TODO should this also show posts, comments made by this user??
   def show
     begin
       user = User.find(params.require(:id))
-      user.count_and_set_following_and_followers
-      render json: user, except: [:password, :token], include: :posts, methods: [:following, :followers] , status: :ok
+      response = {success: true, result: user}
+      render json: response , status: :ok
     rescue ActiveRecord::RecordNotFound
-      head :not_found
+      response = {success: false}
+      render json: response, status: :not_found
     end
+  end
+
+  def index
+    offset = params.require(:offset).to_i
+    # Set limit to supplied value if any otherwise default to 10
+    # max limit 100 per request
+    limit =  (params[:limit] || 10).to_i
+    limit = 100 if limit > 100
+    users = User.order(:id).offset(offset).limit(limit)
+    response = {success: true, result: users, offset: offset, limit: limit}
+    render json: response, status: :ok
   end
 
   private
