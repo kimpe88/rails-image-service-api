@@ -39,6 +39,8 @@ group :development, :test do
   gem 'guard-test'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'
+  gem 'pry', '~> 0.10.1'
+  gem 'pry-byebug', '~> 3.1.0'
 end
 
 group :development do

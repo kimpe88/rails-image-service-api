@@ -14,9 +14,29 @@ RSpec.describe PostsController, type: :request do
     }
   end
 
+  describe 'find post' do
+    before :each do
+      @post = FactoryGirl.create(:post)
+    end
+
+    it 'should find post with valid id' do
+      get "/post/#{@post.id}"
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result']['id']).to eq(@post.id)
+    end
+
+    it 'should return 404 with an invalid id' do
+      get "/post/#{@post.id + 100}"
+      expect(response.status).to be 404
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be false
+    end
+  end
+
   describe 'create post' do
     it 'should successfully create post with all params' do
-
       post '/post/create', post: @post
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
@@ -55,19 +75,52 @@ RSpec.describe PostsController, type: :request do
   end
 
   describe 'update post' do
-   it 'updates post correctly with all details' do
-    pending
-   end
+    before :each do
+      @post = FactoryGirl.build(:post)
+      expect(Post.create_post(@post,[@tag], [@user])).to be true
+    end
+    it 'should update description correctly' do
+      changes = {description: 'updated'}
+      post "/post/#{@post.id}/update", changes
+      expect(response.status).to be 200
+      expect(Post.find(@post.id).description).to eq changes[:description]
+    end
 
-   it 'updates post correctly without tags' do
-     pending
-   end
+    it 'should update tags correctly' do
+      tag1 = FactoryGirl.create(:tag)
+      tag2 = FactoryGirl.build(:tag)
+      changes = {tags: [tag1.text, tag2.text]}
+      post "/post/#{@post.id}/update", changes
+      expect(response.status).to be 200
+      found_post = Post.find(@post.id)
+      expect(found_post.tags.size).to be 2
+      expect(found_post.tags.include?(tag1)).to be true
+      tag2 = Tag.find_by(text: tag2.text)
+      expect(found_post.tags.include?(tag2)).to be true
+    end
 
-   it 'updates post correctly without user tags' do
-     pending
-   end
+    it 'should update tagged users' do
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.create(:user)
+      changes = {user_tags: [user1.username, user2.username]}
+      post "/post/#{@post.id}/update", changes
+      expect(response.status).to be 200
+      found_post = Post.find(@post.id)
+      expect(found_post.tagged_users.size).to be 2
+      expect(found_post.tagged_users.include?(user1)).to be true
+      expect(found_post.tagged_users.include?(user2)).to be true
+    end
+
+    it 'should ignore none existing users' do
+      user1 = FactoryGirl.create(:user)
+      user2 = FactoryGirl.build(:user)
+      changes = {user_tags: [user1.username, user2.username]}
+      post "/post/#{@post.id}/update", changes
+      expect(response.status).to be 200
+      found_post = Post.find(@post.id)
+      expect(found_post.tagged_users.size).to be 1
+      expect(found_post.tagged_users.include?(user1)).to be true
+      expect(found_post.tagged_users.include?(user2)).to be false
+    end
   end
-
-
-
 end

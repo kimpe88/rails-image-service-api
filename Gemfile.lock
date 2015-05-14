@@ -136,6 +136,9 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-byebug (3.1.0)
+      byebug (~> 4.0)
+      pry (~> 0.10)
     rack (1.6.1)
     rack-contrib (1.2.0)
       rack (>= 0.9.1)
@@ -235,6 +238,8 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   meta_request (~> 0.3.4)
   mysql2
+  pry (~> 0.10.1)
+  pry-byebug (~> 3.1.0)
   rails (= 4.2.1)
   rspec-rails (~> 3.2.1)
   sdoc (~> 0.4.0)

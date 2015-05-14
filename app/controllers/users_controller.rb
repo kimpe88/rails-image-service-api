@@ -44,6 +44,15 @@ class UsersController < ApplicationController
     render json: response, status: :ok
   end
 
+  def following
+    begin
+      user = User.find(params.require(:id))
+      #TODO
+    rescue ActiveRecord::RecordNotFound
+      render json: {success: false}, status: :not_found
+    end
+  end
+
   private
   def login_params
     params.require(:user).permit(:username, :password)

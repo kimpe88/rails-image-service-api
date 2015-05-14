@@ -2,6 +2,16 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :request do
 
+  describe 'user following' do
+    it 'should show users followed by that user' do
+      pending("implement following first")
+    end
+
+    it 'should fail with invalid id' do
+      pending("implement following first")
+    end
+  end
+
   describe 'user signup' do
     before :each do
       @user = FactoryGirl.build(:user)

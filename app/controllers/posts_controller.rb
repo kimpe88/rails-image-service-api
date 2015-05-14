@@ -1,4 +1,17 @@
+
 class PostsController < ApplicationController
+
+  def show
+    begin
+      response = {
+        success: true,
+        result: Post.find(params.require(:id))
+      }
+      render json: response
+    rescue ActiveRecord::RecordNotFound
+      render json: {success: false}, status: :not_found
+    end
+  end
 
   def create
     post_params = params.require(:post)
@@ -16,7 +29,20 @@ class PostsController < ApplicationController
   end
 
   def update
-    post_params = params.require(:post)
+    begin
+      post = Post.find(params.require(:id))
+      post.description = params[:description] if params.has_key?(:description)
+      post.tags = find_tags(params[:tags]) if params.has_key?(:tags)
+      post.tagged_users = find_user_tags(params[:user_tags]) if params.has_key?(:user_tags)
+
+      if post.save
+        render json: {success: true}, status: :ok
+      else
+        render json: {success: false}, status: :internal_server_error
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: {success: false}, status: :not_found
+    end
   end
 
 
