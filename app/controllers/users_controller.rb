@@ -45,12 +45,26 @@ class UsersController < ApplicationController
   end
 
   def following
-    begin
-      user = User.find(params.require(:id))
-      #TODO
-    rescue ActiveRecord::RecordNotFound
-      render json: {success: false}, status: :not_found
-    end
+    id = params.require(:id)
+    followings = Following.where(follower: id) || []
+
+    response = {
+      success: true,
+      result: followings
+    }
+
+    render json: response, status: :ok
+  end
+
+  def followers
+    id = params.require(:id)
+    followers = User.find_followers(id)
+    response = {
+      success: true,
+      user: id,
+      followers: followers
+    }
+    render json: response, status: :ok
   end
 
   private

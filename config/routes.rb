@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
+  get  'users',         to: 'users#index'
+  get  'user/:id',      to: 'users#show'
   post 'user/signup',   to: 'users#sign_up'
   post 'user/login',    to: 'users#log_in'
-  get  'user/:id',      to: 'users#show'
-  get  'users',         to: 'users#index'
   get  'user/:id/following', to: 'users#following'
+  get  'user/:id/followers', to: 'users#followers'
 
   post 'post/create',   to: 'posts#create'
   post 'post/:id/update', to: 'posts#update'

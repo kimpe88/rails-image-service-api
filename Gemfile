@@ -41,6 +41,7 @@ group :development, :test do
   gem 'faker', '~> 1.4.3'
   gem 'pry', '~> 0.10.1'
   gem 'pry-byebug', '~> 3.1.0'
+  gem 'rb-inotify', '~> 0.9.5'
 end
 
 group :development do

@@ -1,15 +1,50 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :request do
-
-  describe 'user following' do
-    it 'should show users followed by that user' do
-      pending("implement following first")
+  describe 'following' do
+    before :each do
+      @user = FactoryGirl.create(:user)
     end
 
-    it 'should fail with invalid id' do
-      pending("implement following first")
+    it 'should find an empty array if the user does not follow anyone' do
+      get "/user/#{@user.id}/following"
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result']).to eq []
     end
+
+    it 'should find details of a user that is followed' do
+      user = FactoryGirl.create(:user)
+      @user.follow(user)
+      get "/user/#{@user.id}/following"
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result'].first['followee']['id']).to eq user.id
+    end
+
+    it 'should find ids of all users a specific user is following' do
+      users = []
+      5.times do
+        users << FactoryGirl.create(:user)
+        @user.follow(users.last)
+      end
+      get "/user/#{@user.id}/following"
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result'].size).to be 5
+    end
+
+    it 'should give empty results with nonexisting user' do
+      get "/user/1111/following"
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result']).to eq []
+    end
+
   end
 
   describe 'user signup' do
@@ -151,4 +186,5 @@ RSpec.describe UsersController, type: :request do
       end
     end
   end
+
 end

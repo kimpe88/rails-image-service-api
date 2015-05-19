@@ -241,6 +241,7 @@ DEPENDENCIES
   pry (~> 0.10.1)
   pry-byebug (~> 3.1.0)
   rails (= 4.2.1)
+  rb-inotify (~> 0.9.5)
   rspec-rails (~> 3.2.1)
   sdoc (~> 0.4.0)
   spring

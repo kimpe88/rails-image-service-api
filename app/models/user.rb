@@ -1,11 +1,12 @@
 class User < ActiveRecord::Base
   validates :username, :email, presence: true, uniqueness: true
   validates :birthdate, :description, :gender, presence: true
-  validates :password, length: { minimum: 6 }
+  validates :password, length: { minimum: 7 }
 
   has_many :user_tags
   has_many :posts
   has_many :tagged_posts, through: :user_tags, class_name: 'Post', source: :post
+  has_many :followings, class_name: 'Following', foreign_key: 'follower'
 
   attr_accessor :following, :followers
 
@@ -28,10 +29,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.followers(user)
+    #TODO more ruby way of doing this?
+    User.find_by_sql("SELECT * FROM users, followings WHERE followings.follower = users.id AND followings.followee = ?", user)
+  end
 
-  def as_json(options)
+  def follow(user)
+    self.followings << Following.new(followee: user)
+    self.save
+  end
+
+  def as_json(options = {})
     count_and_set_following_and_followers
-    super(except: [:password, :token], include: :posts, methods: [:following, :followers])
+    super({except: [:password, :token], include: :posts, methods: [:following, :followers]}.merge!(options))
   end
 
   private
