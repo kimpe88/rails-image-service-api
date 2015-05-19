@@ -44,8 +44,7 @@ RSpec.describe User, type: :model do
       token = User.authenticate(@user.username, "fake_password")
       expect(token).to be nil
     end
-
-    describe 'following' do
+    describe 'user follow functionality' do
       before :each do
         @user.save
         @users = []
@@ -53,22 +52,37 @@ RSpec.describe User, type: :model do
           @users << FactoryGirl.create(:user)
         end
       end
-      it 'should successfully follower another user' do
-        @user.follow(@users.first)
-        @user.reload
-        expect(@user.followings.first.followee).to eq @users.first
-      end
-
-      it 'should successfully follow multiple users' do
-        @users.each do |user|
-          @user.follow(user)
+      describe 'following' do
+        it 'should successfully follow another user' do
+          @user.follow(@users.first)
+          @user.reload
+          expect(@user.followings.first.followee).to eq @users.first
         end
-        @user.reload
-        expect(@user.followings.size).to be 5
-        @user.followings.each do |following|
-          expect(@users.include?(following.followee)).to be true
+
+        it 'should successfully follow multiple users' do
+          @users.each do |user|
+            @user.follow(user)
+          end
+          @user.reload
+          expect(@user.followings.size).to be 5
+          @user.followings.each do |following|
+            expect(@users.include?(following.followee)).to be true
+          end
+        end
+      end
+      describe 'followers' do
+        it 'should find followers for a user object' do
+          @users.each do |user|
+            user.follow(@user)
+          end
+          followers = User.followers(@user)
+          expect(followers.size).to be 5
+          @users.each do |user|
+            expect(followers.include?(user)).to be true
+          end
         end
       end
     end
   end
+
 end

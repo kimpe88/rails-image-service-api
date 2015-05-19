@@ -7,7 +7,7 @@ RSpec.describe UsersController, type: :request do
     end
 
     it 'should find an empty array if the user does not follow anyone' do
-      get "/user/#{@user.id}/following"
+      get "/user/#{@user.id}/following", {offset: 0}
       expect(response.status).to be 200
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
@@ -17,7 +17,7 @@ RSpec.describe UsersController, type: :request do
     it 'should find details of a user that is followed' do
       user = FactoryGirl.create(:user)
       @user.follow(user)
-      get "/user/#{@user.id}/following"
+      get "/user/#{@user.id}/following", {offset: 0}
       expect(response.status).to be 200
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
@@ -30,7 +30,7 @@ RSpec.describe UsersController, type: :request do
         users << FactoryGirl.create(:user)
         @user.follow(users.last)
       end
-      get "/user/#{@user.id}/following"
+      get "/user/#{@user.id}/following", {offset: 0}
       expect(response.status).to be 200
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
@@ -38,13 +38,77 @@ RSpec.describe UsersController, type: :request do
     end
 
     it 'should give empty results with nonexisting user' do
-      get "/user/1111/following"
+      get "/user/1111/following", {offset: 0}
       expect(response.status).to be 200
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
       expect(response_json['result']).to eq []
     end
 
+    describe 'pagination' do
+      before :each do
+        @users = []
+        5.times do
+          @users << FactoryGirl.create(:user)
+          @user.follow(@users.last)
+        end
+      end
+      it 'should return following results with offset' do
+        get "/user/#{@user.id}/following", {offset: 0}
+        expect(response.status).to be 200
+        no_offset_json = JSON.parse(response.body)
+        expect(no_offset_json['success']).to be true
+        expect(no_offset_json['result'].size).to be 5
+
+        get "/user/#{@user.id}/following", {offset: 1}
+        expect(response.status).to be 200
+        offset_json = JSON.parse(response.body)
+        expect(offset_json['success']).to be true
+        expect(offset_json['result'].size).to be 4
+        expect(no_offset_json['result'].second).to eq offset_json['result'].first
+      end
+
+      it 'should limit following correctly if value is supplied' do
+        get "/user/#{@user.id}/following", {offset: 0, limit: 3}
+        expect(response.status).to be 200
+        no_offset_json = JSON.parse(response.body)
+        expect(no_offset_json['success']).to be true
+        expect(no_offset_json['result'].size).to be 3
+      end
+    end
+  end
+
+  describe 'followers' do
+    before :each do
+      @user = FactoryGirl.create(:user)
+      @users = []
+      5.times do
+        @users << FactoryGirl.create(:user)
+        @users.last.follow(@user)
+      end
+    end
+    it 'should return followers results with offset' do
+      get "/user/#{@user.id}/followers", {offset: 0}
+      expect(response.status).to be 200
+      no_offset_json = JSON.parse(response.body)
+      expect(no_offset_json['success']).to be true
+      expect(no_offset_json['result'].size).to be 5
+
+      get "/user/#{@user.id}/followers", {offset: 1}
+      expect(response.status).to be 200
+      offset_json = JSON.parse(response.body)
+      expect(offset_json['success']).to be true
+      expect(offset_json['result'].size).to be 4
+      expect(no_offset_json['result'].second).to eq offset_json['result'].first
+    end
+
+    it 'should limit follwers correctly if value is supplied' do
+      get "/user/#{@user.id}/followers", {offset: 0, limit: 3}
+      expect(response.status).to be 200
+      no_offset_json = JSON.parse(response.body)
+      expect(no_offset_json['success']).to be true
+      expect(no_offset_json['result'].size).to be 3
+    end
   end
 
   describe 'user signup' do

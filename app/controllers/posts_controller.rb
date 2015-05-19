@@ -28,6 +28,7 @@ class PostsController < ApplicationController
     end
   end
 
+  require 'pry'
   def update
     begin
       post = Post.find(params.require(:id))
@@ -38,6 +39,7 @@ class PostsController < ApplicationController
       if post.save
         render json: {success: true}, status: :ok
       else
+        binding.pry
         render json: {success: false}, status: :internal_server_error
       end
     rescue ActiveRecord::RecordNotFound

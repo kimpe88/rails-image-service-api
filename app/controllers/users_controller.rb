@@ -34,11 +34,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    offset = params.require(:offset).to_i
-    # Set limit to supplied value if any otherwise default to 10
-    # max limit 100 per request
-    limit =  (params[:limit] || 10).to_i
-    limit = 100 if limit > 100
+    offset, limit = pagination_values
     users = User.order(:id).offset(offset).limit(limit)
     response = {success: true, result: users, offset: offset, limit: limit}
     render json: response, status: :ok
@@ -46,11 +42,14 @@ class UsersController < ApplicationController
 
   def following
     id = params.require(:id)
-    followings = Following.where(follower: id) || []
+    offset, limit = pagination_values
+    followings = Following.where(follower: id).order(:id).offset(offset).limit(limit) || []
 
     response = {
       success: true,
-      result: followings
+      result: followings,
+      offset: offset,
+      limit: limit
     }
 
     render json: response, status: :ok
@@ -58,16 +57,25 @@ class UsersController < ApplicationController
 
   def followers
     id = params.require(:id)
-    followers = User.find_followers(id)
+    offset, limit = pagination_values
+    followers = User.followers(id, offset, limit)
     response = {
       success: true,
       user: id,
-      followers: followers
+      result: followers
     }
     render json: response, status: :ok
   end
 
   private
+  def pagination_values
+    offset = params.require(:offset).to_i
+    # Set limit to supplied value if any otherwise default to 10
+    # max limit 100 per request
+    limit =  (params[:limit] || 10).to_i
+    limit = 100 if limit > 100
+    return offset, limit
+  end
   def login_params
     params.require(:user).permit(:username, :password)
   end

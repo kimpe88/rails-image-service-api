@@ -29,9 +29,10 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.followers(user)
+  def self.followers(user, offset = 0, limit = 10)
     #TODO more ruby way of doing this?
-    User.find_by_sql("SELECT * FROM users, followings WHERE followings.follower = users.id AND followings.followee = ?", user)
+    User.find_by_sql([ "SELECT users.* FROM users, followings WHERE followings.follower = users.id AND followings.followee = ?" +
+                       " ORDER BY id LIMIT ?,?", user, offset, limit])
   end
 
   def follow(user)
