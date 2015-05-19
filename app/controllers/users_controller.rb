@@ -62,7 +62,9 @@ class UsersController < ApplicationController
     response = {
       success: true,
       user: id,
-      result: followers
+      result: followers,
+      offset: offset,
+      limit: limit
     }
     render json: response, status: :ok
   end

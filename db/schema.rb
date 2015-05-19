@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150518085250) do
+ActiveRecord::Schema.define(version: 20150519151245) do
 
   create_table "followings", force: :cascade do |t|
     t.datetime "created_at",           null: false
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 20150518085250) do
   end
 
   add_index "followings", ["follower"], name: "index_followings_on_follower", using: :btree
+
+  create_table "likes", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4
+    t.integer  "post_id",    limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "likes", ["post_id"], name: "index_likes_on_post_id", using: :btree
+  add_index "likes", ["user_id"], name: "index_likes_on_user_id", using: :btree
 
   create_table "posts", force: :cascade do |t|
     t.string   "image",       limit: 255

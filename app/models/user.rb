@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
 
   has_many :user_tags
   has_many :posts
+  has_many :likes
   has_many :tagged_posts, through: :user_tags, class_name: 'Post', source: :post
   has_many :followings, class_name: 'Following', foreign_key: 'follower'
 
@@ -31,8 +32,9 @@ class User < ActiveRecord::Base
 
   def self.followers(user, offset = 0, limit = 10)
     #TODO more ruby way of doing this?
+    # Dependent on sql syntax
     User.find_by_sql([ "SELECT users.* FROM users, followings WHERE followings.follower = users.id AND followings.followee = ?" +
-                       " ORDER BY id LIMIT ?,?", user, offset, limit])
+                       " ORDER BY id LIMIT ?,?", user, offset, limit]) || []
   end
 
   def follow(user)
@@ -41,16 +43,10 @@ class User < ActiveRecord::Base
   end
 
   def as_json(options = {})
-    count_and_set_following_and_followers
+
+    @followers = self.class.followers(self).size
+    @following = self.followings.size
     super({except: [:password, :token], include: :posts, methods: [:following, :followers]}.merge!(options))
   end
 
-  private
-  #TODO Implement count following and followers when associations are done
-  # Better way of doing this??
-  def count_and_set_following_and_followers
-    @following = 0
-    @followers = 0
-    {following: @following, followers: @followers}
-  end
 end

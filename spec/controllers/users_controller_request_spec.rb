@@ -186,6 +186,31 @@ RSpec.describe UsersController, type: :request do
     before :each do
       @user = FactoryGirl.create(:user)
     end
+
+    it 'should show number of followings correctly' do
+      3.times do
+        user = FactoryGirl.create(:user)
+        @user.follow(user)
+      end
+      get "/user/#{@user.id}"
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be true
+      expect(json_response['result']['following']).to be 3
+      expect(json_response['result']['followers']).to be 0
+    end
+
+    it 'should show number of followers correctly' do
+      4.times do
+        user = FactoryGirl.create(:user)
+        user.follow(@user)
+      end
+      get "/user/#{@user.id}"
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be true
+      expect(json_response['result']['followers']).to be 4
+      expect(json_response['result']['following']).to be 0
+    end
+
     it 'should return status 404 when getting a user id that does not exist' do
       begin
         id = rand(1..1000)
