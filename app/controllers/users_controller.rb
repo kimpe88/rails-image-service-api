@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_filter :restrict_access, except: [:sign_up, :log_in]
   def sign_up
     user = User.new(signup_params)
     if user.save

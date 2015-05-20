@@ -4,6 +4,7 @@ RSpec.describe User, type: :model do
   before :each do
     @user = FactoryGirl.build(:user)
   end
+
   it 'should require details all to be set on creation' do
     expect{ @user.save! }.to_not raise_error
   end
@@ -31,6 +32,17 @@ RSpec.describe User, type: :model do
   end
 
   describe 'authentication' do
+
+    it 'should authenticate user with correct password' do
+      @user.save
+      expect(@user.authenticate(@user.password)).to_not be false
+    end
+
+    it 'should fail to authenticate user with incorrect password' do
+      @user.save
+      expect(@user.authenticate("fake_password")).to be false
+    end
+
     it 'should return a unique token when successful' do
       @user.save
       token = User.authenticate(@user.username, @user.password)
@@ -44,6 +56,7 @@ RSpec.describe User, type: :model do
       token = User.authenticate(@user.username, "fake_password")
       expect(token).to be nil
     end
+
     describe 'user follow functionality' do
       before :each do
         @user.save

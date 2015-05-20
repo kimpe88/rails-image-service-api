@@ -3,7 +3,6 @@ require 'base64'
 
 RSpec.describe PostsController, type: :request do
   before :each do
-    @user = FactoryGirl.create(:user)
     @tag = FactoryGirl.create(:tag)
     encoded_image = "data:image/png;base64," << Base64.encode64(File.open(Rails.root + 'spec/fixtures/images/ruby.png', 'rb').read)
     @post = {
@@ -37,7 +36,7 @@ RSpec.describe PostsController, type: :request do
 
   describe 'create post' do
     it 'should successfully create post with all params' do
-      post '/post/create', post: @post
+      post '/post/create', @post, authorization: @token
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
       expect(response.status).to be 201
@@ -48,7 +47,7 @@ RSpec.describe PostsController, type: :request do
 
     it "should create new tags if they don't exist" do
       @post[:tags] = ["tag1", "tag2"]
-      post '/post/create', post: @post
+      post '/post/create', @post, authorization: @token
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
       expect(response.status).to be 201
@@ -57,7 +56,7 @@ RSpec.describe PostsController, type: :request do
 
     it 'should ignore fake usernames' do
       @post[:user_tags] << "fake_user"
-      post '/post/create', post: @post
+      post '/post/create', @post, authorization: @token
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
       expect(response.status).to be 201
@@ -67,7 +66,7 @@ RSpec.describe PostsController, type: :request do
 
     it 'should fail without an image' do
       @post[:image] = nil
-      post '/post/create', post: @post
+      post '/post/create', @post, authorization: @token
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be false
       expect(response.status).to be 500
@@ -81,7 +80,7 @@ RSpec.describe PostsController, type: :request do
     end
     it 'should update description correctly' do
       changes = {description: 'updated'}
-      post "/post/#{@post.id}/update", changes
+      post "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       expect(Post.find(@post.id).description).to eq changes[:description]
     end
@@ -90,7 +89,7 @@ RSpec.describe PostsController, type: :request do
       tag1 = FactoryGirl.create(:tag)
       tag2 = FactoryGirl.build(:tag)
       changes = {tags: [tag1.text, tag2.text]}
-      post "/post/#{@post.id}/update", changes
+      post "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       found_post = Post.find(@post.id)
       expect(found_post.tags.size).to be 2
@@ -103,7 +102,7 @@ RSpec.describe PostsController, type: :request do
       user1 = FactoryGirl.create(:user)
       user2 = FactoryGirl.create(:user)
       changes = {user_tags: [user1.username, user2.username]}
-      post "/post/#{@post.id}/update", changes
+      post "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       found_post = Post.find(@post.id)
       expect(found_post.tagged_users.size).to be 2
@@ -115,7 +114,7 @@ RSpec.describe PostsController, type: :request do
       user1 = FactoryGirl.create(:user)
       user2 = FactoryGirl.build(:user)
       changes = {user_tags: [user1.username, user2.username]}
-      post "/post/#{@post.id}/update", changes
+      post "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       found_post = Post.find(@post.id)
       expect(found_post.tagged_users.size).to be 1

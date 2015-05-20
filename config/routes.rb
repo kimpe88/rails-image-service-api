@@ -6,9 +6,11 @@ Rails.application.routes.draw do
   get  'user/:id/following', to: 'users#following'
   get  'user/:id/followers', to: 'users#followers'
 
+  get  'post/:id',      to: 'posts#show'
   post 'post/create',   to: 'posts#create'
   post 'post/:id/update', to: 'posts#update'
-  get  'post/:id',      to: 'posts#show'
+  get  'post/:id/likes', to: 'likes#index'
+  post 'post/:id/like', to: 'likes#create'
 
 
   # The priority is based upon order of creation: first created -> highest priority.

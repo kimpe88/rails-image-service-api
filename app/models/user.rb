@@ -1,7 +1,8 @@
 class User < ActiveRecord::Base
+  has_secure_password
   validates :username, :email, presence: true, uniqueness: true
   validates :birthdate, :description, :gender, presence: true
-  validates :password, length: { minimum: 7 }
+  validates :password, length: { minimum: 6 }, on: :create
 
   has_many :user_tags
   has_many :posts
@@ -11,23 +12,24 @@ class User < ActiveRecord::Base
 
   attr_accessor :following, :followers
 
-  #TODO implement encrypted passwords
-  def self.hash_password(password)
-    password
-  end
-
   # Check username and password, if they match
   # generate a globally unique token and return it
   def self.authenticate(username, password)
     user = self.find_by(username: username)
-    if user && user.password == self.hash_password(password)
+    if user && user.authenticate(password)
       begin
         token = SecureRandom.hex
       end while self.find_by(token: token)
       user.token = token
+      #TODO should this be without !?
       user.save!
       token
     end
+  end
+
+  # If correct accesstoken is given return user else nil
+  def self.authenticate_with_token(token)
+    User.find_by(token: token)
   end
 
   def self.followers(user, offset = 0, limit = 10)

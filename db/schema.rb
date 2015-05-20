@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519151245) do
+ActiveRecord::Schema.define(version: 20150520085259) do
 
   create_table "followings", force: :cascade do |t|
     t.datetime "created_at",           null: false
@@ -63,15 +63,15 @@ ActiveRecord::Schema.define(version: 20150519151245) do
   add_index "user_tags", ["user_id"], name: "index_user_tags_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "username",    limit: 255
-    t.string   "email",       limit: 255
-    t.string   "password",    limit: 255
+    t.string   "username",        limit: 255
+    t.string   "email",           limit: 255
     t.date     "birthdate"
-    t.text     "description", limit: 65535
-    t.string   "gender",      limit: 255
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.string   "token",       limit: 255
+    t.text     "description",     limit: 65535
+    t.string   "gender",          limit: 255
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "token",           limit: 255
+    t.string   "password_digest", limit: 255
   end
 
 end

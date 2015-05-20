@@ -1,5 +1,6 @@
 
 class PostsController < ApplicationController
+  before_filter :restrict_access, except: :show
 
   def show
     begin
@@ -14,12 +15,11 @@ class PostsController < ApplicationController
   end
 
   def create
-    post_params = params.require(:post)
     post = Post.new
-    post.description = post_params[:description]
-    post.image = post_params[:image]
-    tags = find_tags(post_params[:tags])
-    user_tags = find_user_tags(post_params[:user_tags])
+    post.description = params[:description]
+    post.image = params[:image]
+    tags = find_tags(params[:tags])
+    user_tags = find_user_tags(params[:user_tags])
 
     if Post.create_post(post, tags, user_tags)
       render json: {success: true}, status: :created
@@ -28,7 +28,6 @@ class PostsController < ApplicationController
     end
   end
 
-  require 'pry'
   def update
     begin
       post = Post.find(params.require(:id))
