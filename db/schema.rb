@@ -11,7 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150520085259) do
+ActiveRecord::Schema.define(version: 20150520154817) do
+
+  create_table "comments", force: :cascade do |t|
+    t.text     "comment",    limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  create_table "comments_tags", force: :cascade do |t|
+    t.integer "comment_id", limit: 4
+    t.integer "tag_id",     limit: 4
+  end
+
+  add_index "comments_tags", ["comment_id"], name: "index_comments_tags_on_comment_id", using: :btree
+  add_index "comments_tags", ["tag_id"], name: "index_comments_tags_on_tag_id", using: :btree
 
   create_table "followings", force: :cascade do |t|
     t.datetime "created_at",           null: false
@@ -39,6 +53,8 @@ ActiveRecord::Schema.define(version: 20150520085259) do
     t.datetime "updated_at",                null: false
     t.integer  "user_id",     limit: 4
   end
+
+  add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
 
   create_table "posts_tags", force: :cascade do |t|
     t.integer "post_id", limit: 4

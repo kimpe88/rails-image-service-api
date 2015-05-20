@@ -71,6 +71,13 @@ RSpec.describe PostsController, type: :request do
       expect(response_json['success']).to be false
       expect(response.status).to be 500
     end
+
+    it 'should set logged in user as poster' do
+      post '/post/create', @post, authorization: @token
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(Post.last.user).to eq @user
+    end
   end
 
   describe 'update post' do

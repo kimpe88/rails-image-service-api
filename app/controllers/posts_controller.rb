@@ -16,6 +16,7 @@ class PostsController < ApplicationController
 
   def create
     post = Post.new
+    post.user = @authenticated_user
     post.description = params[:description]
     post.image = params[:image]
     tags = find_tags(params[:tags])
