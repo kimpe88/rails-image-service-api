@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :following do
+  factory :user_following do
     
   end
 

@@ -11,13 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150520154817) do
+ActiveRecord::Schema.define(version: 20150521201117) do
 
   create_table "comments", force: :cascade do |t|
     t.text     "comment",    limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.integer  "author_id",  limit: 4
+    t.integer  "post_id",    limit: 4
   end
+
+  add_index "comments", ["author_id"], name: "index_comments_on_author_id", using: :btree
+  add_index "comments", ["post_id"], name: "index_comments_on_post_id", using: :btree
 
   create_table "comments_tags", force: :cascade do |t|
     t.integer "comment_id", limit: 4
@@ -26,15 +31,6 @@ ActiveRecord::Schema.define(version: 20150520154817) do
 
   add_index "comments_tags", ["comment_id"], name: "index_comments_tags_on_comment_id", using: :btree
   add_index "comments_tags", ["tag_id"], name: "index_comments_tags_on_tag_id", using: :btree
-
-  create_table "followings", force: :cascade do |t|
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.integer  "follower",   limit: 4
-    t.integer  "followee",   limit: 4
-  end
-
-  add_index "followings", ["follower"], name: "index_followings_on_follower", using: :btree
 
   create_table "likes", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -51,10 +47,10 @@ ActiveRecord::Schema.define(version: 20150520154817) do
     t.text     "description", limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.integer  "user_id",     limit: 4
+    t.integer  "author_id",   limit: 4
   end
 
-  add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
+  add_index "posts", ["author_id"], name: "index_posts_on_author_id", using: :btree
 
   create_table "posts_tags", force: :cascade do |t|
     t.integer "post_id", limit: 4
@@ -70,11 +66,21 @@ ActiveRecord::Schema.define(version: 20150520154817) do
     t.datetime "updated_at",             null: false
   end
 
-  create_table "user_tags", force: :cascade do |t|
-    t.integer "post_id", limit: 4
-    t.integer "user_id", limit: 4
+  create_table "user_followings", force: :cascade do |t|
+    t.integer "user_id",      limit: 4
+    t.integer "following_id", limit: 4
   end
 
+  add_index "user_followings", ["following_id"], name: "index_user_followings_on_following_id", using: :btree
+  add_index "user_followings", ["user_id"], name: "index_user_followings_on_user_id", using: :btree
+
+  create_table "user_tags", force: :cascade do |t|
+    t.integer "post_id",    limit: 4
+    t.integer "user_id",    limit: 4
+    t.integer "comment_id", limit: 4
+  end
+
+  add_index "user_tags", ["comment_id"], name: "index_user_tags_on_comment_id", using: :btree
   add_index "user_tags", ["post_id"], name: "index_user_tags_on_post_id", using: :btree
   add_index "user_tags", ["user_id"], name: "index_user_tags_on_user_id", using: :btree
 

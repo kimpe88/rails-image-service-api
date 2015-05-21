@@ -21,7 +21,9 @@ class ApplicationController < ActionController::Base
     end
     response = {success: false}
     # Show more information if not in production
-    response[:exception] = exception if Rails.env.test? || Rails.env.development?
+    if Rails.env.test? || Rails.env.development?
+      response[:exception] = { message: exception.message, backtrace: exception.backtrace}
+    end
     render json: response, status: status_code
   end
 

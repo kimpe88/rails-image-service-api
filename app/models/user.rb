@@ -5,12 +5,15 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }, on: :create
 
   has_many :user_tags
-  has_many :posts
+  has_many :posts, foreign_key: 'author_id'
   has_many :likes
   has_many :tagged_posts, through: :user_tags, class_name: 'Post', source: :post
-  has_many :followings, class_name: 'Following', foreign_key: 'follower'
 
-  attr_accessor :following, :followers
+  has_many :user_followings
+  has_many :followings, through: :user_followings
+
+  has_many :inverse_user_followings, class_name: 'UserFollowing', foreign_key: 'following_id'
+  has_many :followers, through: :inverse_user_followings, source: :user
 
   # Check username and password, if they match
   # generate a globally unique token and return it
@@ -35,12 +38,12 @@ class User < ActiveRecord::Base
   def self.followers(user, offset = 0, limit = 10)
     #TODO more ruby way of doing this?
     # Dependent on sql syntax
-    User.find_by_sql([ "SELECT users.* FROM users, followings WHERE followings.follower = users.id AND followings.followee = ?" +
+    User.find_by_sql([ "SELECT users.* FROM users, followings WHERE followings.follower_id = users.id AND followings.followee_id = ?" +
                        " ORDER BY id LIMIT ?,?", user, offset, limit]) || []
   end
 
   def follow(user)
-    self.followings << Following.new(followee: user)
+    self.followings << Following.new(followee_id: user)
     self.save
   end
 

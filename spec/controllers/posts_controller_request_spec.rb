@@ -76,7 +76,7 @@ RSpec.describe PostsController, type: :request do
       post '/post/create', @post, authorization: @token
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
-      expect(Post.last.user).to eq @user
+      expect(Post.last.author).to eq @user
     end
   end
 

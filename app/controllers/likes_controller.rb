@@ -1,5 +1,5 @@
 class LikesController < ApplicationController
-  before_filter :restrict_access, except: :index
+  before_filter :restrict_access, except: :post_likes
 
   def create
     post = Post.find(params.require(:id))
@@ -7,7 +7,7 @@ class LikesController < ApplicationController
     render json: {success: true}, status: :created
   end
 
-  def index
+  def post_likes
     post = Post.find(params.require(:id))
     response = {
       success: true,
