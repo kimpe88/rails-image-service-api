@@ -24,14 +24,9 @@ class UsersController < ApplicationController
   end
 
   def show
-    begin
-      user = User.find(params.require(:id))
-      response = {success: true, result: user}
-      render json: response , status: :ok
-    rescue ActiveRecord::RecordNotFound
-      response = {success: false}
-      render json: response, status: :not_found
-    end
+    user = User.find(params.require(:id))
+    response = {success: true, result: user}
+    render json: response , status: :ok
   end
 
   def index

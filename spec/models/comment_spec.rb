@@ -1,5 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before :each do
+    @user = FactoryGirl.create(:user)
+  end
+  it 'should be have tags and user_tags' do
+
+    
+  end
 end

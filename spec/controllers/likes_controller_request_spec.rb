@@ -19,7 +19,7 @@ RSpec.describe LikesController, type: :request do
   it 'should fail to fail to like a nonexisting post' do
     post "/post/#{@post.id + 10000}/like", nil, authorization: @token
     json_response = JSON.parse(response.body)
-    expect(response.status).to be 400
+    expect(response.status).to be 404
     expect(json_response['success']).to be false
   end
 

@@ -3,15 +3,11 @@ class PostsController < ApplicationController
   before_filter :restrict_access, except: :show
 
   def show
-    begin
-      response = {
-        success: true,
-        result: Post.find(params.require(:id))
-      }
-      render json: response
-    rescue ActiveRecord::RecordNotFound
-      render json: {success: false}, status: :not_found
-    end
+    response = {
+      success: true,
+      result: Post.find(params.require(:id))
+    }
+    render json: response
   end
 
   def create
@@ -22,7 +18,7 @@ class PostsController < ApplicationController
     tags = find_tags(params[:tags])
     user_tags = find_user_tags(params[:user_tags])
 
-    if Post.create_post(post, tags, user_tags)
+    if post.create_assoc_and_save(tags, user_tags)
       render json: {success: true}, status: :created
     else
       render json: {success: false}, status: :internal_server_error
@@ -30,20 +26,15 @@ class PostsController < ApplicationController
   end
 
   def update
-    begin
-      post = Post.find(params.require(:id))
-      post.description = params[:description] if params.has_key?(:description)
-      post.tags = find_tags(params[:tags]) if params.has_key?(:tags)
-      post.tagged_users = find_user_tags(params[:user_tags]) if params.has_key?(:user_tags)
+    post = Post.find(params.require(:id))
+    post.description = params[:description] if params.has_key?(:description)
+    post.tags = find_tags(params[:tags]) if params.has_key?(:tags)
+    post.tagged_users = find_user_tags(params[:user_tags]) if params.has_key?(:user_tags)
 
-      if post.save
-        render json: {success: true}, status: :ok
-      else
-        binding.pry
-        render json: {success: false}, status: :internal_server_error
-      end
-    rescue ActiveRecord::RecordNotFound
-      render json: {success: false}, status: :not_found
+    if post.save
+      render json: {success: true}, status: :ok
+    else
+      render json: {success: false}, status: :internal_server_error
     end
   end
 
