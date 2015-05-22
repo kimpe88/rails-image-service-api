@@ -8,13 +8,13 @@ Rails.application.routes.draw do
 
   get  'post/:id',      to: 'posts#show'
   post 'post/create',   to: 'posts#create'
-  post 'post/:id/update', to: 'posts#update'
+  patch 'post/:id/update', to: 'posts#update'
   get  'post/:id/likes', to: 'likes#post_likes'
   post 'post/:id/like', to: 'likes#create'
 
   get  'comment/:id', to: 'comments#show'
   post 'comment/create', to: 'comments#create'
-  post 'comment/:id/update', to: 'comments#update'
+  patch 'comment/:id/update', to: 'comments#update'
   get  'post/:id/comments', to: 'comments#post_comments'
 
 end

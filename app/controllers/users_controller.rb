@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include Pagingable
   before_filter :restrict_access, except: [:sign_up, :log_in]
   def sign_up
     user = User.new(signup_params)
@@ -62,14 +63,6 @@ class UsersController < ApplicationController
   end
 
   private
-  def pagination_values
-    offset = params.require(:offset).to_i
-    # Set limit to supplied value if any otherwise default to 10
-    # max limit 100 per request
-    limit =  (params[:limit] || 10).to_i
-    limit = 100 if limit > 100
-    return offset, limit
-  end
   def login_params
     params.require(:user).permit(:username, :password)
   end

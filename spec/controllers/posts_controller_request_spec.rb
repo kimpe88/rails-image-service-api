@@ -87,7 +87,7 @@ RSpec.describe PostsController, type: :request do
     end
     it 'should update description correctly' do
       changes = {description: 'updated'}
-      post "/post/#{@post.id}/update", changes, authorization: @token
+      patch "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       expect(Post.find(@post.id).description).to eq changes[:description]
     end
@@ -96,7 +96,7 @@ RSpec.describe PostsController, type: :request do
       tag1 = FactoryGirl.create(:tag)
       tag2 = FactoryGirl.build(:tag)
       changes = {tags: [tag1.text, tag2.text]}
-      post "/post/#{@post.id}/update", changes, authorization: @token
+      patch "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       found_post = Post.find(@post.id)
       expect(found_post.tags.size).to be 2
@@ -109,7 +109,7 @@ RSpec.describe PostsController, type: :request do
       user1 = FactoryGirl.create(:user)
       user2 = FactoryGirl.create(:user)
       changes = {user_tags: [user1.username, user2.username]}
-      post "/post/#{@post.id}/update", changes, authorization: @token
+      patch "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       found_post = Post.find(@post.id)
       expect(found_post.tagged_users.size).to be 2
@@ -121,7 +121,7 @@ RSpec.describe PostsController, type: :request do
       user1 = FactoryGirl.create(:user)
       user2 = FactoryGirl.build(:user)
       changes = {user_tags: [user1.username, user2.username]}
-      post "/post/#{@post.id}/update", changes, authorization: @token
+      patch "/post/#{@post.id}/update", changes, authorization: @token
       expect(response.status).to be 200
       found_post = Post.find(@post.id)
       expect(found_post.tagged_users.size).to be 1

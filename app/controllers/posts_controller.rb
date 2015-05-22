@@ -38,4 +38,5 @@ class PostsController < ApplicationController
       render json: {success: false}, status: :internal_server_error
     end
   end
+
 end
