@@ -69,7 +69,7 @@ RSpec.describe User, type: :model do
         it 'should successfully follow another user' do
           @user.follow(@users.first)
           @user.reload
-          expect(@user.followings.first.followee).to eq @users.first
+          expect(@user.followings.first).to eq @users.first
         end
 
         it 'should successfully follow multiple users' do
@@ -79,7 +79,7 @@ RSpec.describe User, type: :model do
           @user.reload
           expect(@user.followings.size).to be 5
           @user.followings.each do |following|
-            expect(@users.include?(following.followee)).to be true
+            expect(@users.include?(following)).to be true
           end
         end
       end
@@ -88,10 +88,9 @@ RSpec.describe User, type: :model do
           @users.each do |user|
             user.follow(@user)
           end
-          followers = User.followers(@user)
-          expect(followers.size).to be 5
+          expect(@user.followers.size).to be 5
           @users.each do |user|
-            expect(followers.include?(user)).to be true
+            expect(@user.followers.include?(user)).to be true
           end
         end
       end

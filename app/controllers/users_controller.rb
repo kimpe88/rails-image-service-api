@@ -37,13 +37,11 @@ class UsersController < ApplicationController
   end
 
   def following
-    id = params.require(:id)
     offset, limit = pagination_values
-    followings = Following.where(follower: id).order(:id).offset(offset).limit(limit) || []
-
+    user = User.find(params.require(:id))
     response = {
       success: true,
-      result: followings,
+      result: user.followings.offset(offset).limit(limit),
       offset: offset,
       limit: limit
     }
@@ -52,13 +50,11 @@ class UsersController < ApplicationController
   end
 
   def followers
-    id = params.require(:id)
     offset, limit = pagination_values
-    followers = User.followers(id, offset, limit)
+    user = User.find(params.require(:id))
     response = {
       success: true,
-      user: id,
-      result: followers,
+      result: user.followers.offset(offset).limit(limit),
       offset: offset,
       limit: limit
     }

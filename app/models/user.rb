@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
         token = SecureRandom.hex
       end while self.find_by(token: token)
       user.token = token
-      #TODO should this be without !?
+      # TODO should this be without !?
       user.save!
       token
     end
@@ -35,23 +35,21 @@ class User < ActiveRecord::Base
     User.find_by(token: token)
   end
 
-  def self.followers(user, offset = 0, limit = 10)
-    #TODO more ruby way of doing this?
-    # Dependent on sql syntax
-    User.find_by_sql([ "SELECT users.* FROM users, followings WHERE followings.follower_id = users.id AND followings.followee_id = ?" +
-                       " ORDER BY id LIMIT ?,?", user, offset, limit]) || []
+  def following_count
+    self.followings.count
   end
 
-  def follow(user)
-    self.followings << Following.new(followee_id: user)
-    self.save
+  def followers_count
+    self.followers.count
+  end
+
+  def follow(user_to_follow)
+    self.followings << user_to_follow
+    self.save!
   end
 
   def as_json(options = {})
-
-    @followers = self.class.followers(self).size
-    @following = self.followings.size
-    super({except: [:password, :token], include: :posts, methods: [:following, :followers]}.merge!(options))
+    super({except: [:password, :token], include: :posts, methods: [:following_count, :followers_count]}.merge!(options))
   end
 
 end

@@ -21,8 +21,8 @@ RSpec.describe UsersController, type: :request do
       get "/user/#{@user.id}", nil, authorization: @token
       json_response = JSON.parse(response.body)
       expect(json_response['success']).to be true
-      expect(json_response['result']['following']).to be 3
-      expect(json_response['result']['followers']).to be 0
+      expect(json_response['result']['following_count']).to be 3
+      expect(json_response['result']['followers_count']).to be 0
     end
 
     it 'should show number of followers correctly' do
@@ -33,8 +33,8 @@ RSpec.describe UsersController, type: :request do
       get "/user/#{@user.id}", nil, authorization: @token
       json_response = JSON.parse(response.body)
       expect(json_response['success']).to be true
-      expect(json_response['result']['followers']).to be 4
-      expect(json_response['result']['following']).to be 0
+      expect(json_response['result']['followers_count']).to be 4
+      expect(json_response['result']['following_count']).to be 0
     end
 
     it 'should return status 404 when getting a user id that does not exist' do
@@ -117,7 +117,7 @@ RSpec.describe UsersController, type: :request do
       expect(response.status).to be 200
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
-      expect(response_json['result'].first['followee']['id']).to eq user.id
+      expect(response_json['result'].first['id']).to eq user.id
     end
 
     it 'should find ids of all users a specific user is following' do
@@ -135,10 +135,9 @@ RSpec.describe UsersController, type: :request do
 
     it 'should give empty results with nonexisting user' do
       get "/user/1111/following", {offset: 0}, authorization: @token
-      expect(response.status).to be 200
+      expect(response.status).to be 404
       response_json = JSON.parse(response.body)
-      expect(response_json['success']).to be true
-      expect(response_json['result']).to eq []
+      expect(response_json['success']).to be false
     end
 
     describe 'pagination' do
