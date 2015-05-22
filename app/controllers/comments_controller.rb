@@ -52,6 +52,8 @@ class CommentsController < ApplicationController
     offset, limit = pagination_values
     response = {
       success: true,
+      offset: offset,
+      limit: limit,
       result: Comment.where(post_id: params.require(:id)).offset(offset).limit(limit)
     }
     render json: response, status: :ok

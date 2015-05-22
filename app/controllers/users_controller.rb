@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   include Pagingable
-  before_filter :restrict_access, except: [:sign_up, :log_in]
+  before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
   def sign_up
     user = User.new(signup_params)
     if user.save
@@ -42,9 +42,9 @@ class UsersController < ApplicationController
     user = User.find(params.require(:id))
     response = {
       success: true,
-      result: user.followings.offset(offset).limit(limit),
       offset: offset,
-      limit: limit
+      limit: limit,
+      result: user.followings.offset(offset).limit(limit)
     }
 
     render json: response, status: :ok
@@ -55,9 +55,26 @@ class UsersController < ApplicationController
     user = User.find(params.require(:id))
     response = {
       success: true,
-      result: user.followers.offset(offset).limit(limit),
       offset: offset,
-      limit: limit
+      limit: limit,
+      result: user.followers.offset(offset).limit(limit)
+    }
+    render json: response, status: :ok
+  end
+
+  # A user's feed is all posts made by that user or any of the users it follows
+  # ordered by time of posting
+  def feed
+    user = User.find(params.require(:id))
+    offset, limit = pagination_values
+    feed_users_ids = user.followings.pluck(:id)
+    feed_users_ids << user.id
+    feed_posts = Post.where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
+    response = {
+      success: true,
+      offset: offset,
+      limit: limit,
+      result: feed_posts
     }
     render json: response, status: :ok
   end

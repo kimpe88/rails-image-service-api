@@ -1,6 +1,84 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :request do
+  describe 'feed' do
+    before :each do
+      @user.posts << FactoryGirl.create(:post)
+      5.times do
+        user = FactoryGirl.create(:user)
+        @user.followings << user
+        2.times do
+          user.posts << FactoryGirl.create(:post)
+          sleep 0.1
+        end
+      end
+      # These should not end up in feed since the user
+      # is not following them
+      3.times do
+        u = FactoryGirl.create(:user)
+        u.posts << FactoryGirl.create(:post)
+      end
+      @user.save!
+    end
+
+    it 'should get feed for provided user' do
+      get "/user/#{@user.id}/feed", { limit: 15 }
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result'].size).to be 11
+    end
+
+    it 'should sort results after time' do
+      user = FactoryGirl.create(:user)
+      @user.followings << user
+      sleep 1
+      user.posts << FactoryGirl.create(:post)
+      @user.save!
+      get "/user/#{@user.id}/feed", { limit: 15 }
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result'].size).to be 12
+      expect(response_json['result'].first['id']).to eq user.posts.last.id
+    end
+
+    it 'it should not include followings followings posts' do
+      user = FactoryGirl.create(:user)
+      user.posts << FactoryGirl.create(:post)
+      user.save!
+      @user.followings.each do |following_user|
+        following_user.followings << user
+        following_user.save!
+    end
+
+    get "/user/#{@user.id}/feed"
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result'].any? {|p| p['id'] == user.posts.last.id}).to be false
+    end
+
+    it 'should return results with offset' do
+      get "/user/#{@user.id}/feed", { offset: 1 }
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['offset']).to be 1
+      expect(response_json['limit']).to be 10
+      expect(response_json['result'].size).to be 10
+    end
+
+    it 'should return as many results as limit' do
+      get "/user/#{@user.id}/feed", { limit: 3 }
+      expect(response.status).to be 200
+      response_json = JSON.parse(response.body)
+      expect(response_json['success']).to be true
+      expect(response_json['result'].size).to be 3
+      expect(response_json['offset']).to be 0
+      expect(response_json['limit']).to be 3
+    end
+  end
   describe 'auth' do
     it 'should return 401 with wrong token' do
       get "/users", {offset: 0}, authorization: ActionController::HttpAuthentication::Token.encode_credentials("fake_token")
