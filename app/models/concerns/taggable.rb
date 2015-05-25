@@ -14,5 +14,6 @@ module Taggable
       UserTag.create!(user_tag_args)
     end
     self.save!
+    self.id
   end
 end

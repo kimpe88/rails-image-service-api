@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   def sign_up
     user = User.new(signup_params)
     if user.save
-      response = {success: true}
+      response = {success: true, result: user.id}
       render json: response, status: :created
     else
       response = {success: false}
@@ -47,6 +47,9 @@ class UsersController < ApplicationController
       result: user.followings.offset(offset).limit(limit)
     }
 
+    # Dirty hack to only return the id and username for each follower
+    # Override as json for this specifc instance to not have to build the json manually
+    response[:result].define_singleton_method(:as_json, -> (args) { super(only: [:id, :username], include: [], methods: []) })
     render json: response, status: :ok
   end
 
@@ -57,7 +60,38 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: user.followers.offset(offset).limit(limit)
+      result: user.followers.offset(offset).limit(limit).select([:id, :username])
+    }
+    # Dirty hack to only return the id and username for each follower
+    # Override as json for this specifc instance to not have to build the json manually
+    response[:result].define_singleton_method(:as_json, -> (args) { super(only: [:id, :username], include: [], methods: []) })
+    render json: response , status: :ok
+  end
+
+  def following_posts
+    user = User.find(params.require(:id))
+    offset, limit = pagination_values
+    following_ids = user.followings.pluck(:id)
+    following_posts = Post.where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
+    response = {
+      success: true,
+      offset: offset,
+      limit: limit,
+      result: following_posts
+    }
+    render json: response, status: :ok
+  end
+
+  def followers_posts
+    user = User.find(params.require(:id))
+    offset, limit = pagination_values
+    follower_ids = user.followers.pluck(:id)
+    follower_posts = Post.where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
+    response = {
+      success: true,
+      offset: offset,
+      limit: limit,
+      result: follower_posts
     }
     render json: response, status: :ok
   end
@@ -81,10 +115,10 @@ class UsersController < ApplicationController
 
   private
   def login_params
-    params.require(:user).permit(:username, :password)
+    params.permit(:username, :password)
   end
 
   def signup_params
-    params.require(:user).permit(:username, :email, :password, :birthdate, :description, :gender)
+    params.permit(:username, :email, :password, :birthdate, :description, :gender)
   end
 end

@@ -65,7 +65,14 @@ RSpec.describe User, type: :model do
           @users << FactoryGirl.create(:user)
         end
       end
+
       describe 'following' do
+        it 'should not be able to follow twice' do
+          expect(@user.follow(@users.first)).to_not be false
+          expect(@user.follow(@users.first)).to be false
+          expect(@users.first.followers.size).to be 1
+        end
+
         it 'should successfully follow another user' do
           @user.follow(@users.first)
           @user.reload

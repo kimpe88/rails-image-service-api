@@ -24,7 +24,6 @@ class User < ActiveRecord::Base
         token = SecureRandom.hex
       end while self.find_by(token: token)
       user.token = token
-      # TODO should this be without !?
       user.save!
       token
     end
@@ -43,13 +42,18 @@ class User < ActiveRecord::Base
     self.followers.count
   end
 
+  # Follow a user only if we aren't following him/her already
   def follow(user_to_follow)
-    self.followings << user_to_follow
-    self.save!
+    if(self.followings.where(id: user_to_follow.id).count == 0)
+      self.followings << user_to_follow
+      self.save!
+    else
+      false
+    end
   end
 
   def as_json(options = {})
-    super({except: [:password, :token], include: :posts, methods: [:following_count, :followers_count]}.merge!(options))
+    super({except: [:password_digest, :token], include: :posts, methods: [:following_count, :followers_count]}.merge!(options))
   end
 
 end

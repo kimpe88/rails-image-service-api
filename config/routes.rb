@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   post 'user/login',    to: 'users#log_in'
   get  'user/:id/following', to: 'users#following'
   get  'user/:id/followers', to: 'users#followers'
+  get  'user/:id/following/posts', to: 'users#following_posts'
+  get  'user/:id/followers/posts', to: 'users#followers_posts'
   get  'user/:id/feed',      to: 'users#feed'
 
   get  'post/:id',      to: 'posts#show'

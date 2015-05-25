@@ -18,9 +18,9 @@ class PostsController < ApplicationController
     post.image = params[:image]
     tags = find_tags(params[:tags])
     user_tags = find_user_tags(params[:user_tags])
-
-    if post.create_assoc_and_save(tags, user_tags)
-      render json: {success: true}, status: :created
+    id = post.create_assoc_and_save(tags, user_tags)
+    if id
+      render json: {success: true, result: id}, status: :created
     else
       render json: {success: false}, status: :internal_server_error
     end

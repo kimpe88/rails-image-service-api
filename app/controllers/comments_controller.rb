@@ -20,8 +20,9 @@ class CommentsController < ApplicationController
     tags = find_tags(params[:tags])
     user_tags = find_user_tags(params[:user_tags])
 
-    if comment.create_assoc_and_save(tags, user_tags)
-      render json: { success: true }, status: :created
+    id =  comment.create_assoc_and_save(tags, user_tags)
+    if id
+      render json: { success: true, result: id }, status: :created
     else
       render json: {success: false}, status: :internal_server_error
     end

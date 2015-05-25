@@ -126,7 +126,6 @@ RSpec.describe UsersController, type: :request do
     end
 
     it 'it should return details of user with valid id' do
-      #TODO There should be a better way to do this
       get "/user/#{@user.id}", nil, authorization: @token
       expect(response.status).to be 200
       json_response = JSON.parse(response.body)
@@ -196,6 +195,8 @@ RSpec.describe UsersController, type: :request do
       response_json = JSON.parse(response.body)
       expect(response_json['success']).to be true
       expect(response_json['result'].first['id']).to eq user.id
+      expect(response_json['result'].first['username']).to eq user.username
+      expect(response_json['result'].first.size).to be 2
     end
 
     it 'should find ids of all users a specific user is following' do
@@ -259,6 +260,15 @@ RSpec.describe UsersController, type: :request do
         @users.last.follow(@user)
       end
     end
+    it 'should return followers username and id' do
+      get "/user/#{@user.id}/followers", {offset: 0}, authorization: @token
+      expect(response.status).to be 200
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be true
+      expect(json_response['result'].first.has_key? 'id').to be true
+      expect(json_response['result'].first.has_key? 'username').to be true
+      expect(json_response['result'].first.size).to be 2
+    end
     it 'should return followers results with offset' do
       get "/user/#{@user.id}/followers", {offset: 0}, authorization: @token
       expect(response.status).to be 200
@@ -292,13 +302,13 @@ RSpec.describe UsersController, type: :request do
 
     it 'should signup successfully with the correct details' do
       @hash[:password] = 'password'
-      post '/user/signup', user: @hash
+      post '/user/signup', @hash
       expect(response.status).to eq(201)
     end
 
     it 'should fail with missing information' do
       @hash.keys.each do |key|
-        post '/user/signup', user: @hash.except(key)
+        post '/user/signup', @hash.except(key)
         expect(response.status).to eq(500)
       end
     end
@@ -308,7 +318,7 @@ RSpec.describe UsersController, type: :request do
       user2 = FactoryGirl.build(:user, username: @user[:username])
       hash2 = {}
       user2.attributes.each { |k,v| hash2[k.to_sym] = v  unless v.nil? }
-      post '/user/signup', user: hash2
+      post '/user/signup', hash2
       expect(response.status).to eq(500)
     end
 
@@ -317,39 +327,39 @@ RSpec.describe UsersController, type: :request do
       user2 = FactoryGirl.build(:user, email: @user[:email])
       hash2 = {}
       user2.attributes.each { |k,v| hash2[k.to_sym] = v  unless v.nil? }
-      post '/user/signup', user: hash2
+      post '/user/signup', hash2
       expect(response.status).to eq(500)
     end
 
     it 'should fail with insufficient password' do
       @hash[:password] = '12345'
-      post '/user/signup', user: @hash
+      post '/user/signup', @hash
       expect(response.status).to eq(500)
     end
   end
 
   describe 'user login' do
-    #it 'should login sucessfully with correct details' do
-      #post '/user/login', user: {username: @user.username, password: @user.password}
-      #expect(response.status).to be 200
-      #json_response = JSON.parse(response.body)
-      #expect(json_response['success']).to be true
-      #expect(json_response['result']).to eq(User.find(@user.id).token)
-    #end
+    it 'should login sucessfully with correct details' do
+      post '/user/login', {username: @user.username, password: @user.password}
+      expect(response.status).to be 200
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be true
+      expect(json_response['result']).to eq(User.find(@user.id).token)
+    end
 
-    #it 'should fail to login with invalid username' do
-      #post '/user/login', user: {username: 'wrong_user', password: @user.password}
-      #json_response = JSON.parse(response.body)
-      #expect(json_response['success']).to be false
-      #expect(response.status).to be 401
-    #end
+    it 'should fail to login with invalid username' do
+      post '/user/login', {username: 'wrong_user', password: @user.password}
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be false
+      expect(response.status).to be 401
+    end
 
-    #it 'should fail to login with wrong password' do
-      #post '/user/login', user: {username: @user.username, password: 'wrong_password'}
-      #json_response = JSON.parse(response.body)
-      #expect(json_response['success']).to be false
-      #expect(response.status).to be 401
-    #end
+    it 'should fail to login with wrong password' do
+      post '/user/login',  {username: @user.username, password: 'wrong_password'}
+      json_response = JSON.parse(response.body)
+      expect(json_response['success']).to be false
+      expect(response.status).to be 401
+    end
   end
 
 

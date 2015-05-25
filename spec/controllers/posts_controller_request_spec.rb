@@ -83,7 +83,7 @@ RSpec.describe PostsController, type: :request do
   describe 'update post' do
     before :each do
       @post = FactoryGirl.build(:post)
-      expect(@post.create_assoc_and_save(@tag, @user)).to be true
+      expect(@post.create_assoc_and_save(@tag, @user)).to_not be false
     end
     it 'should update description correctly' do
       changes = {description: 'updated'}

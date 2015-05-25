@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   # protect_from_forgery with: :exception
 
   # Handle exceptions in API specific way
-  # TODO is this bad practice?
   rescue_from ::StandardError, with: :error_occurred
 
   protected
