@@ -16,7 +16,7 @@ FactoryGirl.define do
     end
     password 'password'
     birthdate Faker::Date.between(60.years.ago, 15.years.ago)
-    description  Faker::Lorem.paragraph
+    description { Faker::Lorem.paragraph }
     gender { ['Male', 'Female'].sample }
   end
 end

@@ -67,6 +67,10 @@ RSpec.describe User, type: :model do
       end
 
       describe 'following' do
+        it 'should not be able to follow itself' do
+          expect(@user.follow(@user)).to be false
+        end
+
         it 'should not be able to follow twice' do
           expect(@user.follow(@users.first)).to_not be false
           expect(@user.follow(@users.first)).to be false

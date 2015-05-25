@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
 
   # Follow a user only if we aren't following him/her already
   def follow(user_to_follow)
-    if(self.followings.where(id: user_to_follow.id).count == 0)
+    if(self.id != user_to_follow.id && self.followings.where(id: user_to_follow.id).count == 0)
       self.followings << user_to_follow
       self.save!
     else
