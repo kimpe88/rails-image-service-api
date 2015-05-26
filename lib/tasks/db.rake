@@ -12,7 +12,15 @@ namespace :db do
 
       # Each users has 0 - 50 posts
       rand(0..50).times do
-        FactoryGirl.create(:post, author: user)
+        # Create 0 - 5 tags and user_tags for each post
+        tags = []
+        user_tags = []
+        rand(0..5).times do
+          tags << FactoryGirl.create(:tag)
+          user_tags << User.all.sample
+        end
+
+        FactoryGirl.create(:post, author: user, tags: tags, tagged_users: user_tags)
       end
 
       # Each user makes 0 - 100 comments
