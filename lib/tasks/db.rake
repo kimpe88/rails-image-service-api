@@ -4,6 +4,13 @@ namespace :db do
     size = ENV['size'] || 100
     size = size.to_i
     start_time = Time.now
+
+    # Generate tags
+    tags = []
+    size.times do
+      tags << FactoryGirl.create(:tag)
+    end
+
     size.times do |i|
       if i % 10 == 0
         puts "#{i/size} % done (#{i} of #{size}) in #{(Time.now - start_time).round(4)} seconds"
@@ -13,14 +20,14 @@ namespace :db do
       # Each users has 0 - 50 posts
       rand(0..50).times do
         # Create 0 - 5 tags and user_tags for each post
-        tags = []
         user_tags = []
+        post_tags = []
         rand(0..5).times do
-          tags << FactoryGirl.create(:tag)
           user_tags << User.all.sample
+          post_tags << tags.sample
         end
 
-        FactoryGirl.create(:post, author: user, tags: tags, tagged_users: user_tags)
+        FactoryGirl.create(:post, author: user, tags: post_tags, tagged_users: user_tags)
       end
 
       # Each user makes 0 - 100 comments
