@@ -38,3 +38,5 @@ bower.json
 *.swo
 
 /public/uploads
+/benchmark
+!/benchmark/.keep
