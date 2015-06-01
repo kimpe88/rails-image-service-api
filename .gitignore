@@ -40,3 +40,9 @@ bower.json
 /public/uploads
 /benchmark
 !/benchmark/.keep
+/shared
+!/shared/.keep
+/shared/log
+!/shared/log/.keep
+/shared/pids
+!/shared/pids/.keep
