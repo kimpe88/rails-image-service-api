@@ -1,0 +1,136 @@
+I, [2015-06-01T10:20:40.123590 #25226]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T10:20:41.619884 #25226] FATAL -- : error adding listener addr=/path/to/.unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `initialize': No such file or directory - connect(2) for /path/to/.unicorn.sock (Errno::ENOENT)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `new'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `bind_listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T10:21:53.324346 #25283]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T10:21:54.791096 #25283] FATAL -- : error adding listener addr=/path/to/.unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `initialize': No such file or directory - connect(2) for /path/to/.unicorn.sock (Errno::ENOENT)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `new'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `bind_listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T10:31:19.914513 #25601]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T10:31:21.381771 #25601] FATAL -- : error adding listener addr=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `initialize': No such file or directory - connect(2) for /var/www/sk_instagram_api/sockets/unicorn.sock (Errno::ENOENT)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `new'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `bind_listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T10:32:13.420292 #25669]  INFO -- : Refreshing Gem list
+[0;32mI, [2015-06-01T10:32:14.921748 #25669]  INFO -- : listening on addr=/var/www/sk_instagram_api/sockets/unicorn.sock fd=12
+[0;0m[0;32mI, [2015-06-01T10:32:14.922014 #25669]  INFO -- : listening on addr=0.0.0.0:8080 fd=13
+[0;0m[0;32mI, [2015-06-01T10:32:15.016581 #25674]  INFO -- : worker=0 ready
+[0;0m[0;32mI, [2015-06-01T10:32:15.019478 #25676]  INFO -- : worker=1 ready
+[0;0m[0;32mI, [2015-06-01T10:32:15.020506 #25669]  INFO -- : master process ready
+[0;0m[0;32mI, [2015-06-01T10:32:15.027308 #25679]  INFO -- : worker=2 ready
+[0;0m[0;32mI, [2015-06-01T10:32:15.030023 #25682]  INFO -- : worker=3 ready
+[0;0m[0;32mI, [2015-06-01T11:57:47.081611 #25669]  INFO -- : reaped #<Process::Status: pid 25674 exit 0> worker=0
+[0;0m[0;32mI, [2015-06-01T11:57:47.081718 #25669]  INFO -- : reaped #<Process::Status: pid 25676 exit 0> worker=1
+[0;0m[0;32mI, [2015-06-01T11:57:47.081762 #25669]  INFO -- : reaped #<Process::Status: pid 25679 exit 0> worker=2
+[0;0m[0;32mI, [2015-06-01T11:57:47.081803 #25669]  INFO -- : reaped #<Process::Status: pid 25682 exit 0> worker=3
+[0;0m[0;32mI, [2015-06-01T11:57:47.081955 #25669]  INFO -- : master complete
+[0;0mI, [2015-06-01T12:02:46.418236 #2114]  INFO -- : Refreshing Gem list
+[0;32mI, [2015-06-01T12:02:48.532046 #2114]  INFO -- : unlinking existing socket=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m[0;32mI, [2015-06-01T12:02:48.532207 #2114]  INFO -- : listening on addr=/var/www/sk_instagram_api/sockets/unicorn.sock fd=12
+[0;0m[0;32mI, [2015-06-01T12:02:48.532419 #2114]  INFO -- : listening on addr=0.0.0.0:8080 fd=13
+[0;0m[0;32mI, [2015-06-01T12:02:48.656903 #2114]  INFO -- : master process ready
+[0;0m[0;32mI, [2015-06-01T12:02:48.663063 #2119]  INFO -- : worker=0 ready
+[0;0m[0;32mI, [2015-06-01T12:02:48.667921 #2121]  INFO -- : worker=1 ready
+[0;0m[0;32mI, [2015-06-01T12:02:48.670314 #2127]  INFO -- : worker=3 ready
+[0;0m[0;32mI, [2015-06-01T12:02:48.670586 #2124]  INFO -- : worker=2 ready
+[0;0m[0;32mI, [2015-06-01T12:04:53.445958 #2114]  INFO -- : reaped #<Process::Status: pid 2121 exit 0> worker=1
+[0;0m[0;32mI, [2015-06-01T12:04:53.446058 #2114]  INFO -- : reaped #<Process::Status: pid 2127 exit 0> worker=3
+[0;0m[0;32mI, [2015-06-01T12:04:53.546592 #2114]  INFO -- : reaped #<Process::Status: pid 2119 exit 0> worker=0
+[0;0m[0;32mI, [2015-06-01T12:04:53.546694 #2114]  INFO -- : reaped #<Process::Status: pid 2124 exit 0> worker=2
+[0;0m[0;32mI, [2015-06-01T12:04:53.546868 #2114]  INFO -- : master complete
+[0;0mI, [2015-06-01T12:06:20.676073 #2101]  INFO -- : Refreshing Gem list
+[0;32mI, [2015-06-01T12:06:22.515673 #2101]  INFO -- : unlinking existing socket=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m[0;32mI, [2015-06-01T12:06:22.515833 #2101]  INFO -- : listening on addr=/var/www/sk_instagram_api/sockets/unicorn.sock fd=12
+[0;0m[0;32mI, [2015-06-01T12:06:22.516072 #2101]  INFO -- : listening on addr=0.0.0.0:8080 fd=13
+[0;0m[0;32mI, [2015-06-01T12:06:22.629155 #2101]  INFO -- : master process ready
+[0;0m[0;32mI, [2015-06-01T12:06:22.636005 #2111]  INFO -- : worker=2 ready
+[0;0m[0;32mI, [2015-06-01T12:06:22.639479 #2108]  INFO -- : worker=1 ready
+[0;0m[0;32mI, [2015-06-01T12:06:22.643423 #2106]  INFO -- : worker=0 ready
+[0;0m[0;32mI, [2015-06-01T12:06:22.643717 #2114]  INFO -- : worker=3 ready
+[0;0mI, [2015-06-01T12:41:24.345185 #3529]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T12:41:26.353540 #3529] FATAL -- : error adding listener addr=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `initialize': Operation not permitted - connect(2) for /var/www/sk_instagram_api/sockets/unicorn.sock (Errno::EPERM)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `new'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `bind_listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T12:43:23.650343 #3714]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T12:43:25.614787 #3714] FATAL -- : error adding listener addr=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:152:in `bind_listen': socket=/var/www/sk_instagram_api/sockets/unicorn.sock specified but it is not a socket! (ArgumentError)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T12:45:24.266338 #3767]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T12:45:26.220338 #3767] FATAL -- : error adding listener addr=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `initialize': Operation not permitted - connect(2) for /var/www/sk_instagram_api/sockets/unicorn.sock (Errno::EPERM)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `new'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `bind_listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T13:50:13.332137 #2758]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T13:50:15.361552 #2758] FATAL -- : error adding listener addr=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `initialize': Operation not permitted - connect(2) for /var/www/sk_instagram_api/sockets/unicorn.sock (Errno::EPERM)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `new'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:158:in `bind_listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'
+I, [2015-06-01T13:51:16.646908 #2834]  INFO -- : Refreshing Gem list
+[1;35mF, [2015-06-01T13:51:18.641619 #2834] FATAL -- : error adding listener addr=/var/www/sk_instagram_api/sockets/unicorn.sock
+[0;0m/home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/socket_helper.rb:152:in `bind_listen': socket=/var/www/sk_instagram_api/sockets/unicorn.sock specified but it is not a socket! (ArgumentError)
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:242:in `listen'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `block in bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `each'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:813:in `bind_new_listeners!'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/lib/unicorn/http_server.rb:138:in `start'
+	from /home/vagrant/.rbenv/versions/2.2.2/lib/ruby/gems/2.2.0/gems/unicorn-4.9.0/bin/unicorn_rails:209:in `<top (required)>'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `load'
+	from /home/vagrant/.rbenv/versions/2.2.2/bin/unicorn_rails:23:in `<main>'

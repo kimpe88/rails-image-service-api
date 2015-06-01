@@ -5,125 +5,63 @@
 #
 namespace :benchmark do
   desc "Benchmarks /users with 25 concurrent threads for 120s"
-  task users_small: :environment do
-    thread_count = ENV['threads'] || 25
+  task users: :environment do
+    thread_count = num_threads
     ids = setup
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/users', url: "http://localhost:3000/users"
-      end
-    end.jmx(file: "benchmark/users_#{thread_count}_testplan.jmx")
-  end
-
-  desc "Bencharks /users with 100 concurrent threads for 120s"
-  task users_large: :environment do
-    thread_count = ENV['threads'] || 100
-    ids = setup
-    test do
-      threads count: thread_count, rampup: 5, duration: 120 do
-        header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/users', url: "http://localhost:3000/users"
+        visit name: '/users', url: "http://localhost/users"
       end
     end.jmx(file: "benchmark/users_#{thread_count}_testplan.jmx")
   end
 
   desc "Benchmarks /user/:id/feed with 25 concurrent threads for 120s"
-  task feed_small: :environment do
-    thread_count = ENV['threads'] || 25
+  task feed: :environment do
+    thread_count = num_threads
     ids = setup
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/user/:id/feed', url: "http://localhost:3000/user/#{ids[:user].id}/feed"
-      end
-    end.jmx(file: "benchmark/feed_#{thread_count}_testplan.jmx")
-  end
-
-  desc "Benchmarks /user/:id/feed with 100 concurrent threads for 120s"
-  task feed_large: :environment do
-    thread_count = ENV['threads'] || 100
-    ids = setup
-    test do
-      threads count: thread_count, rampup: 5, duration: 120 do
-        header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/user/:id/feed', url: "http://localhost:3000/user/#{ids[:user].id}/feed"
+        visit name: '/user/:id/feed', url: "http://localhost/user/#{ids[:user].id}/feed"
       end
     end.jmx(file: "benchmark/feed_#{thread_count}_testplan.jmx")
   end
 
   desc "Benchmarks /user/:id/followers with 25 concurrent threads for 120s"
-  task followers_small: :environment do
-    thread_count = ENV['threads'] || 25
+  task followers: :environment do
+    thread_count = num_threads
     ids = setup
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/user/:id/followers', url: "http://localhost:3000/user/#{ids[:user].id}/followers"
-      end
-    end.jmx(file: "benchmark/followers_#{thread_count}_testplan.jmx")
-  end
-
-  desc "Benchmarks /user/:id/followers with 100 concurrent threads for 120s"
-  task followers_large: :environment do
-    thread_count = ENV['threads'] || 100
-    ids = setup
-    test do
-      threads count: thread_count, rampup: 5, duration: 120 do
-        header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/user/:id/followers', url: "http://localhost:3000/user/#{ids[:user].id}/followers"
+        visit name: '/user/:id/followers', url: "http://localhost/user/#{ids[:user].id}/followers"
       end
     end.jmx(file: "benchmark/followers_#{thread_count}_testplan.jmx")
   end
 
   desc "Benchmarks /post/:id/comments with 25 concurrent threads for 120s"
-  task post_comments_small: :environment do
-    thread_count = ENV['threads'] || 25
+  task post_comments: :environment do
+    thread_count = num_threads
     ids = setup
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/post/:id/comments', url: "http://localhost:3000/post/#{ids[:post].id}/comments"
+        visit name: '/post/:id/comments', url: "http://localhost/post/#{ids[:post].id}/comments"
       end
     end.jmx(file: "benchmark/post_comments_#{thread_count}_testplan.jmx")
   end
 
-  desc "Benchmarks /post/:id/comments with 100 concurrent threads for 120s"
-  task post_comments_large: :environment do
-    thread_count = ENV['threads'] || 100
+  task all: :environment do
+    thread_count = num_threads
     ids = setup
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/post/:id/comments', url: "http://localhost:3000/post/#{ids[:post].id}/comments"
-      end
-    end.jmx(file: "benchmark/post_comments_#{thread_count}_testplan.jmx")
-  end
-
-  task all_small: :environment do
-    thread_count = ENV['threads'] || 25
-    ids = setup
-    test do
-      threads count: thread_count, rampup: 5, duration: 120 do
-        header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/users', url: "http://localhost:3000/users"
-        visit name: '/user/:id/feed', url: "http://localhost:3000/user/#{ids[:user].id}/feed"
-        visit name: '/user/:id/followers', url: "http://localhost:3000/user/#{ids[:user].id}/followers"
-        visit name: '/post/:id/comments', url: "http://localhost:3000/post/#{ids[:post].id}/comments"
-      end
-    end.jmx(file: "benchmark/all_#{thread_count}_testplan.jmx")
-  end
-
-  task all_large: :environment do
-    thread_count = ENV['threads'] || 100
-    ids = setup
-    test do
-      threads count: thread_count, rampup: 5, duration: 120 do
-        header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/users', url: "http://localhost:3000/users"
-        visit name: '/user/:id/feed', url: "http://localhost:3000/user/#{ids[:user].id}/feed"
-        visit name: '/user/:id/followers', url: "http://localhost:3000/user/#{ids[:user].id}/followers"
-        visit name: '/post/:id/comments', url: "http://localhost:3000/post/#{ids[:post].id}/comments"
+        visit name: '/users', url: "http://localhost/users"
+        visit name: '/user/:id/feed', url: "http://localhost/user/#{ids[:user].id}/feed"
+        visit name: '/user/:id/followers', url: "http://localhost/user/#{ids[:user].id}/followers"
+        visit name: '/post/:id/comments', url: "http://localhost/post/#{ids[:post].id}/comments"
       end
     end.jmx(file: "benchmark/all_#{thread_count}_testplan.jmx")
   end
@@ -134,6 +72,18 @@ namespace :benchmark do
   end
 
   private
+  def num_threads
+    if ENV['threads'] == 'small'
+      return 25
+    elsif ENV['threads'] == 'large'
+      return 100
+    elsif is_number?(ENV['threads'])
+      return ENV['threads']
+    else
+      return 25 # Default to small with no args
+    end
+  end
+
   def setup
     User.connection
     Post.connection
