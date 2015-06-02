@@ -209,6 +209,7 @@ GEM
     ruby-jmeter (2.13.2)
       nokogiri
       rest-client
+    ruby-prof (0.15.8)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -267,6 +268,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9.5)
   rspec-rails (~> 3.2.1)
   ruby-jmeter (~> 2.13.2)
+  ruby-prof (~> 0.15.8)
   sdoc (~> 0.4.0)
   spring
   unicorn (~> 4.9.0)

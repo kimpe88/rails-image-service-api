@@ -22,6 +22,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'carrierwave', '~> 0.10.0'
 gem 'carrierwave-base64', '~> 1.5'
 gem 'unicorn', '~> 4.9.0'
+gem 'ruby-prof', '~> 0.15.8'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

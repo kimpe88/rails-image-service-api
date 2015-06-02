@@ -1,3 +1,4 @@
+require 'ruby-prof'
 class UsersController < ApplicationController
   include Pagingable
   before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
