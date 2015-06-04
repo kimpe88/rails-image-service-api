@@ -23,6 +23,7 @@ gem 'carrierwave', '~> 0.10.0'
 gem 'carrierwave-base64', '~> 1.5'
 gem 'unicorn', '~> 4.9.0'
 gem 'ruby-prof', '~> 0.15.8'
+gem 'active_model_serializers', '~> 0.9.3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -45,11 +46,9 @@ group :development, :test do
   gem 'pry', '~> 0.10.1'
   gem 'pry-byebug', '~> 3.1.0'
   gem 'rb-inotify', '~> 0.9.5'
-end
-
-group :development do
-  gem 'better_errors', '~> 2.1.1'
-  gem 'binding_of_caller', '~> 0.7.2'
-  gem 'meta_request', '~> 0.3.4'
+  gem 'assert_performance', github: 'kimpe88/assert_performance', branch: 'master'
+  gem 'rack-mini-profiler'
+  gem 'stackprof'
+  gem 'flamegraph'
 end
 

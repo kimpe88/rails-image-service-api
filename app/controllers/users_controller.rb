@@ -1,4 +1,3 @@
-require 'ruby-prof'
 class UsersController < ApplicationController
   include Pagingable
   before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
@@ -27,15 +26,15 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params.require(:id))
-    response = {success: true, result: user}
+    response = { success: true, result: UserSerializer.new(user, root: false) }
     render json: response , status: :ok
   end
 
   def index
     offset, limit = pagination_values
     users = User.order(:id).offset(offset).limit(limit)
-    response = {success: true, result: users, offset: offset, limit: limit}
-    render json: response, status: :ok
+    response = {success: true, result: ActiveModel::ArraySerializer.new(users, each_serializer: UserSerializer, root: false), offset: offset, limit: limit}
+    render json: response , status: :ok
   end
 
   def following
@@ -102,9 +101,8 @@ class UsersController < ApplicationController
   def feed
     user = User.find(params.require(:id))
     offset, limit = pagination_values
-    feed_users_ids = user.followings.pluck(:id)
-    feed_users_ids << user.id
-    feed_posts = Post.where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
+    feed_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = #{user.id}) OR author_id = #{user.id}")
+      .order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,

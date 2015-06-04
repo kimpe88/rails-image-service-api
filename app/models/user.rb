@@ -34,6 +34,10 @@ class User < ActiveRecord::Base
     User.find_by(token: token)
   end
 
+  def active_model_serializer
+    UserSerializer
+  end
+
   def following_count
     self.followings.count
   end
@@ -52,8 +56,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def as_json(options = {})
-    super({except: [:password_digest, :token], include: :posts, methods: [:following_count, :followers_count]}.merge!(options))
-  end
+  #def as_json(options = {})
+    #super({except: [:password_digest, :token], include: :posts, methods: [:following_count, :followers_count]}.merge!(options))
+  #end
 
 end
