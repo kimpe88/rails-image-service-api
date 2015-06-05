@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
     comment = Comment.find(params.require(:id))
     response = {
       success: true,
-      result: comment
+      result: CommentSerializer.new(comment, root: false)
     }
     render json: response, status: :ok
   end
@@ -41,21 +41,14 @@ class CommentsController < ApplicationController
     end
   end
 
-  def show
-    response = {
-      success: true,
-      result: Comment.find(params.require(:id))
-    }
-    render json: response, status: :ok
-  end
-
   def post_comments
     offset, limit = pagination_values
+    comments = Comment.where(post_id: params.require(:id)).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
       limit: limit,
-      result: Comment.where(post_id: params.require(:id)).offset(offset).limit(limit)
+      result: ActiveModel::ArraySerializer.new(comments, each_serializer: CommentSerializer, root: false)
     }
     render json: response, status: :ok
   end

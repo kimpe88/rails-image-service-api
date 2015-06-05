@@ -34,7 +34,7 @@ RSpec.describe LikesController, type: :request do
     json_response = JSON.parse(response.body)
     expect(json_response['result'].size).to be 2
     users.each do |user|
-      expect(json_response['result'].any? { |like| like['user_id'] == user.id}).to be true
+      expect(json_response['result'].any? { |like| like['user'] == user.id}).to be true
     end
 
   end

@@ -10,12 +10,4 @@ class Post < ActiveRecord::Base
   has_many :tagged_users, through: :user_tags, class_name: 'User', source: :user
 
   mount_base64_uploader :image, ImageUploader
-
-  def image_url
-    "/uploads/post/image/#{self.id}/file.png"
-  end
-
-  def as_json(options = {})
-    super({ except: [:image, :created_at, :updated_at], methods: :image_url })
-  end
 end

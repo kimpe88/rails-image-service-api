@@ -44,12 +44,8 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: user.followings.offset(offset).limit(limit)
+      result: ActiveModel::ArraySerializer.new(user.followings.offset(offset).limit(limit), each_serializer: UserFollowSerializer, root:false)
     }
-
-    # Dirty hack to only return the id and username for each follower
-    # Override as json for this specifc instance to not have to build the json manually
-    response[:result].define_singleton_method(:as_json, -> (args) { super(only: [:id, :username], include: [], methods: []) })
     render json: response, status: :ok
   end
 
@@ -60,11 +56,8 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: user.followers.offset(offset).limit(limit).select([:id, :username])
+      result: ActiveModel::ArraySerializer.new(user.followers.offset(offset).limit(limit), each_serializer: UserFollowSerializer, root: false)
     }
-    # Dirty hack to only return the id and username for each follower
-    # Override as json for this specifc instance to not have to build the json manually
-    response[:result].define_singleton_method(:as_json, -> (args) { super(only: [:id, :username], include: [], methods: []) })
     render json: response , status: :ok
   end
 
@@ -77,7 +70,7 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: following_posts
+      result: ActiveModel::ArraySerializer.new(following_posts, each_serializer: PostSerializer, root: false)
     }
     render json: response, status: :ok
   end
@@ -107,7 +100,7 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: feed_posts
+      result: ActiveModel::ArraySerializer.new(feed_posts, each_serializer: PostSerializer, root: false)
     }
     render json: response, status: :ok
   end

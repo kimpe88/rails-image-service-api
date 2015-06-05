@@ -6,7 +6,7 @@ class PostsController < ApplicationController
   def show
     response = {
       success: true,
-      result: Post.find(params.require(:id))
+      result: PostSerializer.new(Post.find(params.require(:id)), root: false)
     }
     render json: response
   end

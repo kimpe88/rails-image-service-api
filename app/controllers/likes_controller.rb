@@ -11,7 +11,7 @@ class LikesController < ApplicationController
     post = Post.find(params.require(:id))
     response = {
       success: true,
-      result: post.likes
+      result: ActiveModel::ArraySerializer.new(post.likes, each_serializer: LikeSerializer, root: false)
     }
     render json: response, status: :ok
   end
