@@ -84,7 +84,7 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: follower_posts
+      result: ActiveModel::ArraySerializer.new(follower_posts, each_serializer: PostSerializer, root: false)
     }
     render json: response, status: :ok
   end

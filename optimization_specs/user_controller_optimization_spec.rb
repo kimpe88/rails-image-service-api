@@ -96,7 +96,7 @@ RSpec.describe UsersController, type: :request do
     expect(response.status).to be 200
   end
 
-  it 'should profile memory for feed' do
+  it 'should profile cpu for feed' do
     class UsersController
       # Alias index method if this is the first time we're monkey patching
       if !self.method_defined?(:old_feed)
@@ -120,6 +120,54 @@ RSpec.describe UsersController, type: :request do
     # Get feed for user
     u = User.first
     get "/user/#{u.id}/feed"
+    expect(response.status).to be 200
+  end
+
+  it 'should profile memory for followers_posts' do
+    class UsersController
+      if !self.method_defined?(:old_followers_posts)
+        puts "Aliasing followers_posts"
+        alias_method :old_followers_posts, :followers_posts
+      end
+
+      def followers_posts
+        puts "patched followers posts"
+        GC.enable_stats
+        RubyProf.measure_mode = RubyProf::MEMORY
+        RubyProf.start
+        # Call the real index method to profile it
+        self.old_followers_posts
+        profiling_result = RubyProf.stop
+        printer = RubyProf::CallTreePrinter.new(profiling_result)
+        printer.print(File.open(Rails.root + 'benchmark/followers_posts_memory_profile.out.app', 'w+'))
+      end
+    end
+    u = User.find(User.count/2)
+    get "/user/#{u.id}/followers/posts", {offset: 0}, authorization: @token
+    expect(response.status).to be 200
+  end
+
+  it 'should profile cpu for followers' do
+    class UsersController
+      if !self.method_defined?(:old_followers_posts)
+        puts "Aliasing followers_posts"
+        alias_method :old_followers_posts, :followers_posts
+      end
+
+      def followers_posts
+        puts "patched followers_posts"
+        GC.enable_stats
+        RubyProf.measure_mode = RubyProf::CPU_TIME
+        RubyProf.start
+        # Call the real index method to profile it
+        self.old_followers_posts
+        profiling_result = RubyProf.stop
+        printer = RubyProf::CallTreePrinter.new(profiling_result)
+        printer.print(File.open(Rails.root + 'benchmark/followers_posts_cpu_profile.out.app', 'w+'))
+      end
+    end
+    u = User.find(User.count/2)
+    get "/user/#{u.id}/followers/posts", {offset: 0}, authorization: @token
     expect(response.status).to be 200
   end
 end

@@ -22,7 +22,6 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'carrierwave', '~> 0.10.0'
 gem 'carrierwave-base64', '~> 1.5'
 gem 'unicorn', '~> 4.9.0'
-gem 'ruby-prof', '~> 0.15.8'
 gem 'active_model_serializers', '~> 0.9.3'
 
 group :development, :test do
@@ -47,7 +46,8 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.1.0'
   gem 'rb-inotify', '~> 0.9.5'
   gem 'assert_performance', github: 'kimpe88/assert_performance', branch: 'master'
-  gem 'rack-mini-profiler'
+  gem 'ruby-prof', '~> 0.15.8'
+  gem 'rack-mini-profiler', require: false
   gem 'stackprof'
   gem 'flamegraph'
 end
