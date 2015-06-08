@@ -50,5 +50,6 @@ group :development, :test do
   gem 'rack-mini-profiler', require: false
   gem 'stackprof'
   gem 'flamegraph'
+  gem "lol_dba"
 end
 

@@ -62,10 +62,9 @@ class UsersController < ApplicationController
   end
 
   def following_posts
-    user = User.find(params.require(:id))
     offset, limit = pagination_values
-    following_ids = user.followings.pluck(:id)
-    following_posts = Post.where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
+    following_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?)", params.require(:id))
+      .order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
@@ -76,10 +75,9 @@ class UsersController < ApplicationController
   end
 
   def followers_posts
-    user = User.find(params.require(:id))
     offset, limit = pagination_values
-    follower_ids = user.followers.pluck(:id)
-    follower_posts = Post.where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
+    follower_posts = Post.where("author_id in (select user_id from user_followings where following_id = ?)", params.require(:id))
+      .order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
@@ -92,9 +90,9 @@ class UsersController < ApplicationController
   # A user's feed is all posts made by that user or any of the users it follows
   # ordered by time of posting
   def feed
-    user = User.find(params.require(:id))
+    id = params.require(:id)
     offset, limit = pagination_values
-    feed_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = #{user.id}) OR author_id = #{user.id}")
+    feed_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?) OR author_id = ?", id, id)
       .order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
