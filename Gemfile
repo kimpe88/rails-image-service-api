@@ -51,5 +51,6 @@ group :development, :test do
   gem 'stackprof'
   gem 'flamegraph'
   gem "lol_dba"
+  gem 'newrelic_rpm'
 end
 
