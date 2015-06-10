@@ -63,8 +63,8 @@ class UsersController < ApplicationController
 
   def following_posts
     offset, limit = pagination_values
-    following_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?)", params.require(:id))
-      .order(created_at: :desc).offset(offset).limit(limit)
+    following_posts =  Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ?', user.id)
+      .distinct.order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
@@ -76,8 +76,8 @@ class UsersController < ApplicationController
 
   def followers_posts
     offset, limit = pagination_values
-    follower_posts = Post.where("author_id in (select user_id from user_followings where following_id = ?)", params.require(:id))
-      .order(created_at: :desc).offset(offset).limit(limit)
+    follower_posts = Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.user_id").where('user_followings.following_id = ?', params.require(:id))
+      .distinct.order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
@@ -92,8 +92,8 @@ class UsersController < ApplicationController
   def feed
     id = params.require(:id)
     offset, limit = pagination_values
-    feed_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?) OR author_id = ?", id, id)
-      .order(created_at: :desc).offset(offset).limit(limit)
+    feed_posts = Post.joins("LEFT JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ? or posts.author_id = ?', id, id)
+      .distinct.order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,

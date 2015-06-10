@@ -4,6 +4,7 @@
 # or number of threads can be overridden by specifying a threads parameter
 #
 namespace :benchmark do
+  port = 3000
   desc "Benchmarks /users with 25 concurrent threads for 120s"
   task users: :environment do
     thread_count = num_threads
@@ -11,7 +12,8 @@ namespace :benchmark do
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/users', url: "http://localhost/users"
+        visit name: '/users', url: "http://localhost/users",
+        port: port
       end
     end.jmx(file: "benchmark/users_#{thread_count}_testplan.jmx")
   end
@@ -23,7 +25,8 @@ namespace :benchmark do
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/user/:id/feed', url: "http://localhost/user/#{ids[:user].id}/feed"
+        visit name: '/user/:id/feed', url: "http://localhost/user/#{ids[:user].id}/feed",
+        port: port
       end
     end.jmx(file: "benchmark/feed_#{thread_count}_testplan.jmx")
   end
@@ -35,7 +38,8 @@ namespace :benchmark do
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/user/:id/followers', url: "http://localhost/user/#{ids[:user].id}/followers"
+        visit name: '/user/:id/followers', url: "http://localhost/user/#{ids[:user].id}/followers",
+        port: port
       end
     end.jmx(file: "benchmark/followers_#{thread_count}_testplan.jmx")
   end
@@ -47,7 +51,8 @@ namespace :benchmark do
     test do
       threads count: thread_count, rampup: 5, duration: 120 do
         header({name: 'Authorization', value: "Token #{ids[:user].token}"})
-        visit name: '/post/:id/comments', url: "http://localhost/post/#{ids[:post].id}/comments"
+        visit name: '/post/:id/comments', url: "http://localhost/post/#{ids[:post].id}/comments",
+        port: port
       end
     end.jmx(file: "benchmark/post_comments_#{thread_count}_testplan.jmx")
   end
@@ -61,7 +66,8 @@ namespace :benchmark do
         visit name: '/users', url: "http://localhost/users"
         visit name: '/user/:id/feed', url: "http://localhost/user/#{ids[:user].id}/feed"
         visit name: '/user/:id/followers', url: "http://localhost/user/#{ids[:user].id}/followers"
-        visit name: '/post/:id/comments', url: "http://localhost/post/#{ids[:post].id}/comments"
+        visit name: '/post/:id/comments', url: "http://localhost/post/#{ids[:post].id}/comments",
+        port: port
       end
     end.jmx(file: "benchmark/all_#{thread_count}_testplan.jmx")
   end
@@ -77,7 +83,7 @@ namespace :benchmark do
       return 25
     elsif ENV['threads'] == 'large'
       return 100
-    elsif is_number?(ENV['threads'])
+    elsif ENV['threads'].is_a? Numeric
       return ENV['threads']
     else
       return 25 # Default to small with no args
