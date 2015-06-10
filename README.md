@@ -1,8 +1,8 @@
 # Image service API for Rails performance evaluation
-The scope of this project is to implement a small API for and image upload social media service modeled after Instagram. It has no real world applications other than
+The scope of this project is to implement a small API for an image upload social media service modeled after Instagram. It has no real world applications other than
 for evaluation performance of Ruby on Rails and will be used as a basis for identifying bottleneck in performance.
 
-The API was implemented according to specification specification given by [Slagkryssaren]( http://slagkryssaren.com )
+The API was implemented according to specification given by [Slagkryssaren]( http://slagkryssaren.com )
 
 ## API specifications
 | Path               	| Params                                                                                                         	| Response                                                             	|
