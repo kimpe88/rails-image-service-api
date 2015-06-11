@@ -20,7 +20,7 @@ limit = 1000
 user = User.all.sample
 puts "Benchmarking feed optimization"
 results = []
-Benchmark.bm(10) do |x|
+Benchmark.bm(30) do |x|
   x.report("Unoptimized") do
     feed_users_ids = user.followings.pluck(:id)
     feed_users_ids << user.id
@@ -29,8 +29,16 @@ Benchmark.bm(10) do |x|
   x.report("Nested select") do
     results << Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = #{user.id}) OR author_id = #{user.id}").order(created_at: :desc).offset(offset).limit(limit)
   end
-  x.report("Inner join") do
+  x.report("Inner join or") do
     results << Post.joins("LEFT JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ? or posts.author_id = ?', user.id, user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
+  end
+  x.report("Custom sql using find_by_sql") do
+    sql_query = <<-SQL
+    SELECT `posts`.* FROM `posts` WHERE `posts`.`author_id` = ? UNION
+    SELECT DISTINCT `posts`.* FROM `posts` LEFT JOIN `user_followings` ON `posts`.`author_id` = `user_followings`.`following_id` WHERE `user_followings`.`user_id` = ?
+    ORDER BY created_at desc LIMIT ? OFFSET ?
+    SQL
+    results << Post.find_by_sql([sql_query, user.id, user.id, limit, offset])
   end
 end
 check_results(results)

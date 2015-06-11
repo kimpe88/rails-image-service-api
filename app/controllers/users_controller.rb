@@ -92,8 +92,12 @@ class UsersController < ApplicationController
   def feed
     id = params.require(:id)
     offset, limit = pagination_values
-    feed_posts = Post.joins("LEFT JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ? or posts.author_id = ?', id, id)
-      .distinct.order(created_at: :desc).offset(offset).limit(limit)
+    sql_query = <<-SQL
+    SELECT `posts`.* FROM `posts` WHERE `posts`.`author_id` = ? UNION
+    SELECT DISTINCT `posts`.* FROM `posts` LEFT JOIN `user_followings` ON `posts`.`author_id` = `user_followings`.`following_id` WHERE `user_followings`.`user_id` = ?
+    ORDER BY created_at desc LIMIT ? OFFSET ?
+    SQL
+    feed_posts = Post.find_by_sql([sql_query, id, id, limit, offset])
     response = {
       success: true,
       offset: offset,
