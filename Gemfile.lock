@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/kimpe88/assert_performance.git
-  revision: bf22dc067d9b49974c61cb0b0c0e4a394f0e27cc
+  revision: c4dffb7326ac6ba1dcef799fa320bbea55539f9d
   branch: master
   specs:
     assert_performance (0.1.0)
@@ -61,7 +61,7 @@ GEM
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-    carrierwave-base64 (1.5)
+    carrierwave-base64 (1.6)
       activerecord (>= 3.2.0)
       activesupport (>= 3.2.0)
       carrierwave (>= 0.8.0, < 0.11.0)
@@ -98,7 +98,7 @@ GEM
     formatador (0.2.5)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
-    guard (2.12.5)
+    guard (2.12.6)
       formatador (>= 0.2.4)
       listen (~> 2.7)
       lumberjack (~> 1.0)
@@ -112,7 +112,7 @@ GEM
       em-websocket (~> 0.5)
       guard (~> 2.8)
       multi_json (~> 1.8)
-    guard-rspec (4.5.0)
+    guard-rspec (4.5.2)
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
@@ -124,12 +124,11 @@ GEM
       domain_name (~> 0.5)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
-    jbuilder (2.2.13)
+    jbuilder (2.3.0)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
-    json (1.8.2)
-    kgio (2.9.3)
-    listen (2.10.0)
+    json (1.8.3)
+    listen (2.10.1)
       celluloid (~> 0.16.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -143,10 +142,10 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
-    mime-types (2.5)
+    mime-types (2.6.1)
     mini_portile (0.6.2)
-    minitest (5.6.1)
-    multi_json (1.11.0)
+    minitest (5.7.0)
+    multi_json (1.11.1)
     multipart-post (2.0.0)
     mysql2 (0.3.18)
     nenv (0.2.0)
@@ -170,7 +169,7 @@ GEM
       pry (~> 0.10)
     puma (2.11.3)
       rack (>= 1.1, < 2.0)
-    rack (1.6.1)
+    rack (1.6.4)
     rack-mini-profiler (0.9.3)
       rack (>= 1.1.3)
     rack-test (0.6.3)
@@ -186,6 +185,9 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.2.1)
       sprockets-rails
+    rails-api (0.4.0)
+      actionpack (>= 3.2.11)
+      railties (>= 3.2.11)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.6)
@@ -199,14 +201,14 @@ GEM
       activesupport (= 4.2.1)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    raindrops (0.13.0)
     rake (10.4.2)
     rake-compiler (0.9.5)
       rake
-    rb-fsevent (0.9.4)
+    rb-fsevent (0.9.5)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
     rdoc (4.2.0)
+      json (~> 1.4)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -223,7 +225,7 @@ GEM
     rspec-mocks (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-rails (3.2.1)
+    rspec-rails (3.2.3)
       actionpack (>= 3.0, < 4.3)
       activesupport (>= 3.0, < 4.3)
       railties (>= 3.0, < 4.3)
@@ -232,7 +234,7 @@ GEM
       rspec-mocks (~> 3.2.0)
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
-    ruby-jmeter (2.13.2)
+    ruby-jmeter (2.13.3)
       nokogiri
       rest-client
     ruby-prof (0.15.8)
@@ -242,14 +244,14 @@ GEM
     shellany (0.0.1)
     slop (3.6.0)
     spring (1.3.6)
-    sprockets (3.1.0)
+    sprockets (3.2.0)
       rack (~> 1.0)
-    sprockets-rails (2.3.0)
+    sprockets-rails (2.3.1)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
     stackprof (0.2.7)
-    test-unit (3.0.9)
+    test-unit (3.1.2)
       power_assert
     thor (0.19.1)
     thread_safe (0.3.5)
@@ -260,11 +262,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
-    unicorn (4.9.0)
-      kgio (~> 2.6)
-      rack
-      raindrops (~> 0.7)
-    web-console (2.1.2)
+    web-console (2.1.3)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
@@ -297,6 +295,7 @@ DEPENDENCIES
   puma (~> 2.11.3)
   rack-mini-profiler
   rails (= 4.2.1)
+  rails-api (~> 0.4.0)
   rb-inotify (~> 0.9.5)
   rspec-rails (~> 3.2.1)
   ruby-jmeter (~> 2.13.2)
@@ -304,7 +303,6 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   spring
   stackprof
-  unicorn (~> 4.9.0)
   web-console (~> 2.0)
 
 BUNDLED WITH

@@ -1,4 +1,6 @@
 require 'benchmark'
+require 'assert_performance'
+require 'pry'
 
 # Make sure that each result set has the same items as the first one
 # unessecary extra loop over first resultset but only for testing so
@@ -8,68 +10,116 @@ def check_results(results)
     raise "Not same amount of responses" unless result.size == results.first.size
   end
 
-  results.each do |current_result|
-    results.first.each do |correct_result_item|
+  results.first.each do |correct_result_item|
+    results.each do |current_result|
       raise "Item missing" unless current_result.include? correct_result_item
     end
   end
 end
 
+# Disable GC for tests for more reliable results
+ENV["RUBY_DISABLE_GC"] = 'true'
+
 offset = 0
 limit = 1000
-user = User.all.sample
-puts "Benchmarking feed optimization"
 results = []
-Benchmark.bm(30) do |x|
-  x.report("Unoptimized") do
+user = User.all.sample
+tmp = nil
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
     feed_users_ids = user.followings.pluck(:id)
     feed_users_ids << user.id
-    results << Post.where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
+    tmp = Post.where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
-  x.report("Nested select") do
-    results << Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = #{user.id}) OR author_id = #{user.id}").order(created_at: :desc).offset(offset).limit(limit)
-  end
-  x.report("Inner join or") do
-    results << Post.joins("LEFT JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ? or posts.author_id = ?', user.id, user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
-  end
-  x.report("Custom sql using find_by_sql") do
-    sql_query = <<-SQL
-    SELECT `posts`.* FROM `posts` WHERE `posts`.`author_id` = ? UNION
-    SELECT DISTINCT `posts`.* FROM `posts` LEFT JOIN `user_followings` ON `posts`.`author_id` = `user_followings`.`following_id` WHERE `user_followings`.`user_id` = ?
-    ORDER BY created_at desc LIMIT ? OFFSET ?
-    SQL
-    results << Post.find_by_sql([sql_query, user.id, user.id, limit, offset])
-  end
+  tmp
 end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
+
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    tmp = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = #{user.id}) OR author_id = #{user.id}").order(created_at: :desc).offset(offset).limit(limit)
+  end
+  tmp
+end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
+
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    tmp = Post.where(author_id: user.id).union(Post.joins("LEFT JOIN `user_followings` ON `posts`.`author_id` = `user_followings`.`following_id` WHERE `user_followings`.`user_id` = #{user.id}")).order(created_at: :desc).limit(limit).offset(offset)
+  end
+  tmp
+end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
 check_results(results)
 
+
+puts "Benchmarking followers"
 results = []
-puts "Benchmarking followers optimization"
-Benchmark.bm(10) do |x|
-  x.report("Unoptimized") do
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
     follower_ids = user.followers.pluck(:id)
-    results << Post.where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
+    tmp = Post.where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
-  x.report("Custom qury") do
-    results << Post.where("author_id in (select user_id from user_followings where following_id = #{user.id})").order(created_at: :desc).offset(offset).limit(limit)
-  end
-
-  x.report("Inner join") do
-    results << Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.user_id").where('user_followings.following_id = ?', user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
-  end
+  tmp
 end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    tmp = Post.where("author_id in (select user_id from user_followings where following_id = #{user.id})").order(created_at: :desc).offset(offset).limit(limit)
+  end
+  tmp
+end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    tmp = Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.user_id").where('user_followings.following_id = ?', user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
+  end
+  tmp
+end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
 check_results(results)
 
-results = []
-puts "Benchmarking following_posts"
-Benchmark.bm(10) do |x|
-  x.report("Custom qury") do
-    results << Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?)", user.id)
-      .order(created_at: :desc).offset(offset).limit(limit)
-  end
 
-  x.report("Inner join") do
-    results << Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ?', user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
+puts "Benchmarking followings"
+results = []
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    following_ids = user.followings.pluck(:id)
+    tmp = Post.where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
+  tmp
 end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    tmp = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?)", user.id)
+        .order(created_at: :desc).offset(offset).limit(limit)
+  end
+  tmp
+end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
+benchmark_results = AssertPerformance.benchmark_code("Benchmarking feed optimization") do
+  100.times do
+    tmp = Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ?', user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
+  end
+  tmp
+end
+results << benchmark_results[:results]
+puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]}"
+
 check_results(results)
