@@ -50,5 +50,4 @@ test:
 production:
   <<: *default
   database: sk_instagram_api_production
-  username: sk_instagram_api
-  password: <%= ENV['SK_INSTAGRAM_API_DATABASE_PASSWORD'] %>
+  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>

@@ -60,7 +60,7 @@ class UsersController < ApplicationController
       success: true,
       offset: offset,
       limit: limit,
-      result: user.followers.offset(offset).limit(limit).select([:id, :username])
+      result: user.followers.offset(offset).limit(limit)
     }
     # Dirty hack to only return the id and username for each follower
     # Override as json for this specifc instance to not have to build the json manually

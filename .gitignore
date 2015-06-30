@@ -46,3 +46,5 @@ bower.json
 !/shared/log/.keep
 /shared/pids
 !/shared/pids/.keep
+config/newrelic.yml
+db/database_dump.sql
