@@ -78,14 +78,11 @@ namespace :benchmark do
   end
 
   private
+  # Either set the number of threads manually or default to 25
   def num_threads
-    if ENV['threads'] == 'small'
-      return 25
-    elsif ENV['threads'] == 'large'
-      return 100
-    elsif ENV['threads'].is_a? Numeric
-      return ENV['threads']
-    else
+    begin
+      return Integer(ENV['threads'])
+    rescue
       return 25 # Default to small with no args
     end
   end
