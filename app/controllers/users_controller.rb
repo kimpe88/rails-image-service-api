@@ -63,21 +63,22 @@ class UsersController < ApplicationController
 
   def following_posts
     offset, limit = pagination_values
-    following_posts =  Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ?', user.id)
-      .distinct.order(created_at: :desc).offset(offset).limit(limit)
+    following_ids = UserFollowing.where(user_id: id).pluck(:following_id)
+    posts = Post.select(:id, :description, :author_id, :created_at).where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
       limit: limit,
-      result: ActiveModel::ArraySerializer.new(following_posts, each_serializer: PostSerializer, root: false)
+      result: ActiveModel::ArraySerializer.new(posts, each_serializer: PostSerializer, root: false)
     }
     render json: response, status: :ok
   end
 
   def followers_posts
     offset, limit = pagination_values
-    follower_posts = Post.joins("INNER JOIN user_followings ON posts.author_id = user_followings.user_id").where('user_followings.following_id = ?', params.require(:id))
-      .distinct.order(created_at: :desc).offset(offset).limit(limit)
+    id = params.require(:id)
+    follower_ids = UserFollowing.where(following_id: id).pluck(:user_id)
+    follower_posts = Post.select(:id, :description, :author_id, :created_at).where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,
@@ -90,9 +91,10 @@ class UsersController < ApplicationController
   # A user's feed is all posts made by that user or any of the users it follows
   # ordered by time of posting
   def feed
-    id = params.require(:id)
     offset, limit = pagination_values
-    feed_posts = Post.where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?) OR author_id = ?", id, id).order(created_at: :desc).offset(offset).limit(limit)
+    id = User.find(params.require(:id))
+    feed_users_ids = UserFollowing.where(user_id: id).pluck(:following_id) << id
+    feed_posts = Post.select(:id, :description, :author_id, :created_at).where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
     response = {
       success: true,
       offset: offset,

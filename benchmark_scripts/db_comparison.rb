@@ -13,7 +13,6 @@ def check_results(results)
   results.first.each do |correct_result_item|
     results.each do |current_result|
       unless(current_result.any?{|item| item.id == correct_result_item.id})
-        binding.pry
         puts "Item missing #{correct_result_item.inspect}"
       end
     end
@@ -52,6 +51,13 @@ ActiveRecord::Base.uncached do
 
   benchmark_results = AssertPerformance.benchmark_code("Feed union and join") do
     Post.select(:id, :description, :author_id, :created_at).where(author_id: user.id).union(Post.select(:id, :description, :author_id, :created_at).joins("LEFT JOIN `user_followings` ON `posts`.`author_id` = `user_followings`.`following_id` WHERE `user_followings`.`user_id` = #{user.id}")).order(created_at: :desc).limit(limit).offset(offset)
+  end
+  results << benchmark_results[:results]
+  puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
+
+  benchmark_results = AssertPerformance.benchmark_code("Feed unoptimized") do
+    feed_users_ids = UserFollowing.where(user_id: user.id).pluck(:following_id) << user.id
+    Post.select(:id, :description, :author_id, :created_at).where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
   results << benchmark_results[:results]
   puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
