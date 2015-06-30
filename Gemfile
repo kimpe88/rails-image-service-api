@@ -23,7 +23,6 @@ gem 'carrierwave', '0.10.0'
 gem 'carrierwave-base64', '1.5'
 gem 'active_model_serializers', '0.9.3'
 gem 'puma', '2.11.3'
-gem 'active_record_union', '1.1.0'
 gem 'rails-api', '0.4.0'
 
 group :development, :test do
@@ -54,5 +53,6 @@ group :development, :test do
   gem 'flamegraph'
   gem "lol_dba"
   gem 'newrelic_rpm'
+  gem 'active_record_union', '1.1.0'
 end
 
