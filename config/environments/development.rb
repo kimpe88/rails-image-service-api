@@ -22,10 +22,6 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
-  # Allow ip from outside vagrant to see better errors page
-  BetterErrors::Middleware.allow_ip! '10.0.2.2'
-
-
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 end

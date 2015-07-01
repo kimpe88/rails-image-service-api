@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   include Pagingable
-  before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
+  #before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
   def sign_up
     user = User.new(signup_params)
     if user.save
