@@ -36,6 +36,7 @@ module SkInstagramApi
     # Force Rails API gem
     config.api_only = true
 
+    config.cache_store = :memory_store, { size: 256.megabytes }
 
     config.generators do |g|
       g.test_framework :rspec

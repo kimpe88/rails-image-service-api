@@ -5,11 +5,13 @@ class CommentsController < ApplicationController
 
   def show
     comment = Comment.find(params.require(:id))
-    response = {
-      success: true,
-      result: CommentSerializer.new(comment, root: false)
-    }
-    render json: response, status: :ok
+    if stale? comment
+      response = {
+        success: true,
+        result: CommentSerializer.new(comment, root: false)
+      }
+      render json: response, status: :ok
+    end
   end
 
   def create
@@ -43,13 +45,15 @@ class CommentsController < ApplicationController
 
   def post_comments
     offset, limit = pagination_values
-    comments = Comment.select(:id, :comment, :author_id, :post_id).where(post_id: params.require(:id)).offset(offset).limit(limit)
-    response = {
-      success: true,
-      offset: offset,
-      limit: limit,
-      result: ActiveModel::ArraySerializer.new(comments, each_serializer: CommentSerializer, root: false)
-    }
-    render json: response, status: :ok
+    comments = Comment.select(:id, :comment, :author_id, :post_id, :updated_at).where(post_id: params.require(:id)).offset(offset).limit(limit)
+    if stale? comments
+      response = {
+        success: true,
+        offset: offset,
+        limit: limit,
+        result: ActiveModel::ArraySerializer.new(comments, each_serializer: CommentSerializer, root: false)
+      }
+      render json: response, status: :ok
+    end
   end
 end

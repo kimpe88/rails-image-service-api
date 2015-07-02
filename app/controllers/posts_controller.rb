@@ -4,11 +4,14 @@ class PostsController < ApplicationController
   before_filter :restrict_access, except: :show
 
   def show
-    response = {
-      success: true,
-      result: PostSerializer.new(Post.find(params.require(:id)), root: false)
-    }
-    render json: response
+    post = Post.find(params.require(:id))
+    if stale? post
+      response = {
+        success: true,
+        result: PostSerializer.new(post, root: false)
+      }
+      render json: response
+    end
   end
 
   def create

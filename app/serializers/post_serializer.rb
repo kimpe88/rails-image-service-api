@@ -1,4 +1,4 @@
-class PostSerializer < ActiveModel::Serializer
+class PostSerializer < ApplicationSerializer
   attributes :id, :image, :description, :author
 
   def image

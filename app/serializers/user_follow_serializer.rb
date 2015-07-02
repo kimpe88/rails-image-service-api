@@ -1,3 +1,3 @@
-class UserFollowSerializer < ActiveModel::Serializer
+class UserFollowSerializer < ApplicationSerializer
   attributes :id, :username
 end

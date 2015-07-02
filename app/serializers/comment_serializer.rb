@@ -1,4 +1,4 @@
-class CommentSerializer < ActiveModel::Serializer
+class CommentSerializer < ApplicationSerializer
   attributes :id, :comment, :author, :post
 
   def author
