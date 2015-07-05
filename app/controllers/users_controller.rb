@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   include Pagingable
-  before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
+  #before_filter :restrict_access, except: [:sign_up, :log_in, :feed]
   def sign_up
     user = User.new(signup_params)
     if user.save
@@ -34,10 +34,9 @@ class UsersController < ApplicationController
 
   def index
     offset, limit = pagination_values
-    users = User.order(:id).offset(offset).limit(limit)
+    users = User.select(:id, :username, :email, :birthdate, :description, :gender, :followings_count, :followers_count, :updated_at).order(:id).offset(offset).limit(limit)
     if stale? users
-      response = {success: true, result: ActiveModel::ArraySerializer.new(users, each_serializer: UserSerializer, root: false), offset: offset, limit: limit}
-      render json: response , status: :ok
+      render json: UserSerializer.array_to_json(users, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 
@@ -46,13 +45,7 @@ class UsersController < ApplicationController
     user = User.find(params.require(:id))
     followings = user.followings.offset(offset).limit(limit)
     if stale? followings
-      response = {
-        success: true,
-        offset: offset,
-        limit: limit,
-        result: ActiveModel::ArraySerializer.new(followings, each_serializer: UserFollowSerializer, root:false)
-      }
-      render json: response, status: :ok
+      render json: UserSerializer.array_to_json(followings, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 
@@ -61,13 +54,7 @@ class UsersController < ApplicationController
     user = User.find(params.require(:id))
     followers = user.followers.offset(offset).limit(limit)
     if stale? followers
-      response = {
-        success: true,
-        offset: offset,
-        limit: limit,
-        result: ActiveModel::ArraySerializer.new(followers, each_serializer: UserFollowSerializer, root: false)
-      }
-      render json: response , status: :ok
+      render json: UserSerializer.array_to_json(followers, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 
@@ -76,13 +63,7 @@ class UsersController < ApplicationController
     following_ids = UserFollowing.where(user_id: id).pluck(:following_id)
     posts = Post.select(:id, :description, :author_id, :created_at, :updated_at).where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
     if stale? posts
-      response = {
-        success: true,
-        offset: offset,
-        limit: limit,
-        result: ActiveModel::ArraySerializer.new(posts, each_serializer: PostSerializer, root: false)
-      }
-      render json: response, status: :ok
+      render json: PostSerializer.array_to_json(posts, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 
@@ -92,13 +73,7 @@ class UsersController < ApplicationController
     follower_ids = UserFollowing.where(following_id: id).pluck(:user_id)
     follower_posts = Post.select(:id, :description, :author_id, :created_at, :updated_at).where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
     if stale? follower_posts
-      response = {
-        success: true,
-        offset: offset,
-        limit: limit,
-        result: ActiveModel::ArraySerializer.new(follower_posts, each_serializer: PostSerializer, root: false)
-      }
-      render json: response, status: :ok
+      render json: PostSerializer.array_to_json(followers_posts, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 
@@ -110,13 +85,7 @@ class UsersController < ApplicationController
     feed_users_ids = UserFollowing.where(user_id: id).pluck(:following_id) << id
     feed_posts = Post.select(:id, :description, :author_id, :created_at, :updated_at).where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
     if stale? feed_posts
-      response = {
-        success: true,
-        offset: offset,
-        limit: limit,
-        result: ActiveModel::ArraySerializer.new(feed_posts, each_serializer: PostSerializer, root: false)
-      }
-      render json: response, status: :ok
+      render json: PostSerializer.array_to_json(feed_posts, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 

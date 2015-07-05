@@ -38,14 +38,6 @@ class User < ActiveRecord::Base
     UserSerializer
   end
 
-  def following_count
-    self.followings.count
-  end
-
-  def followers_count
-    self.followers.count
-  end
-
   # Follow a user only if we aren't following him/her already
   def follow(user_to_follow)
     if(self.id != user_to_follow.id && self.followings.where(id: user_to_follow.id).count == 0)
@@ -55,9 +47,5 @@ class User < ActiveRecord::Base
       false
     end
   end
-
-  #def as_json(options = {})
-    #super({except: [:password_digest, :token], include: :posts, methods: [:following_count, :followers_count]}.merge!(options))
-  #end
 
 end

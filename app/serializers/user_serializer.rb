@@ -1,5 +1,7 @@
 class UserSerializer < ApplicationSerializer
-  attributes :id, :username, :email, :birthdate, :description, :gender, :following_count, :followers_count
+  attributes :id, :username, :email, :birthdate, :description, :gender, :followings_count, :followers_count, :posts
 
-  has_many :posts
+  def posts
+    object.posts.pluck(:id)
+  end
 end

@@ -47,13 +47,7 @@ class CommentsController < ApplicationController
     offset, limit = pagination_values
     comments = Comment.select(:id, :comment, :author_id, :post_id, :updated_at).where(post_id: params.require(:id)).offset(offset).limit(limit)
     if stale? comments
-      response = {
-        success: true,
-        offset: offset,
-        limit: limit,
-        result: ActiveModel::ArraySerializer.new(comments, each_serializer: CommentSerializer, root: false)
-      }
-      render json: response, status: :ok
+      render json: CommentSerializer.array_to_json(comments, {success: true, offset: offset, limit: limit}) , status: :ok
     end
   end
 end

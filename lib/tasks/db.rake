@@ -1,4 +1,11 @@
 namespace :db do
+  desc "Clears and sets correct values for counter caches"
+  task set_counter_cache: :environment do
+    User.find_each do |u|
+      User.reset_counters(u.id, :followers)
+      User.reset_counters(u.id, :followings)
+    end
+  end
   desc "Creates a dataset to use for testing, takes size as an environment variable"
   task generate: :environment do
     size = ENV['size'] || 100
