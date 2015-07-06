@@ -81,7 +81,7 @@ class UsersController < ApplicationController
   # ordered by time of posting
   def feed
     offset, limit = pagination_values
-    id = User.find(params.require(:id))
+    id = params.require(:id)
     feed_users_ids = UserFollowing.where(user_id: id).pluck(:following_id) << id
     feed_posts = Post.select(:id, :description, :author_id, :created_at, :updated_at).where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
     if stale? feed_posts
