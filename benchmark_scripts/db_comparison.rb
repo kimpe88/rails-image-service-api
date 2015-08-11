@@ -33,7 +33,7 @@ tmp = nil
 
 # Don't use ActiveRecord cache either
 ActiveRecord::Base.uncached do
-  benchmark_results = AssertPerformance.benchmark_code("Feed unoptimized") do
+  benchmark_results = AssertPerformance.benchmark_code("feed_unoptimized") do
     feed_users_ids = user.followings.pluck(:id)
     feed_users_ids << user.id
     Post.where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
@@ -41,21 +41,7 @@ ActiveRecord::Base.uncached do
   results << benchmark_results[:results]
   puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
 
-
-  benchmark_results = AssertPerformance.benchmark_code("Feed nestled select") do
-    Post.select(:id, :description, :author_id, :created_at).where("author_id in (SELECT following_id FROM user_followings WHERE user_id = #{user.id}) OR author_id = #{user.id}").order(created_at: :desc).offset(offset).limit(limit)
-  end
-  results << benchmark_results[:results]
-  puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
-
-
-  benchmark_results = AssertPerformance.benchmark_code("Feed union and join") do
-    Post.select(:id, :description, :author_id, :created_at).where(author_id: user.id).union(Post.select(:id, :description, :author_id, :created_at).joins("LEFT JOIN `user_followings` ON `posts`.`author_id` = `user_followings`.`following_id` WHERE `user_followings`.`user_id` = #{user.id}")).order(created_at: :desc).limit(limit).offset(offset)
-  end
-  results << benchmark_results[:results]
-  puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
-
-  benchmark_results = AssertPerformance.benchmark_code("Feed unoptimized") do
+  benchmark_results = AssertPerformance.benchmark_code("feed_optimized") do
     feed_users_ids = UserFollowing.where(user_id: user.id).pluck(:following_id) << user.id
     Post.select(:id, :description, :author_id, :created_at).where(author: feed_users_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
@@ -67,21 +53,16 @@ ActiveRecord::Base.uncached do
 
   puts "Benchmarking followers"
   results = []
-  benchmark_results = AssertPerformance.benchmark_code("Followers unoptimized") do
+  benchmark_results = AssertPerformance.benchmark_code("followers_unoptimized") do
     follower_ids = user.followers.pluck(:id)
     Post.where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
   results << benchmark_results[:results]
   puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
 
-  benchmark_results = AssertPerformance.benchmark_code("Followers nested select") do
-    Post.select(:id, :description, :author_id, :created_at).where("author_id in (select user_id from user_followings where following_id = #{user.id})").order(created_at: :desc).offset(offset).limit(limit)
-  end
-  results << benchmark_results[:results]
-  puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
-
-  benchmark_results = AssertPerformance.benchmark_code("Followers inner join") do
-    Post.select(:id, :description, :author_id, :created_at).joins("INNER JOIN user_followings ON posts.author_id = user_followings.user_id").where('user_followings.following_id = ?', user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
+  benchmark_results = AssertPerformance.benchmark_code("followers_optimized") do
+    follower_ids = UserFollowing.where(following_id: user.id).pluck(:user_id)
+    Post.select(:id, :description, :author_id, :created_at, :updated_at).where(author: follower_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
   results << benchmark_results[:results]
   puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
@@ -91,22 +72,16 @@ ActiveRecord::Base.uncached do
   puts "Benchmarking followings"
   results = []
   tmp = nil
-  benchmark_results = AssertPerformance.benchmark_code("Followings unoptimized") do
+  benchmark_results = AssertPerformance.benchmark_code("followings_unoptimized") do
     following_ids = user.followings.pluck(:id)
     Post.where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
   results << benchmark_results[:results]
   puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
 
-  benchmark_results = AssertPerformance.benchmark_code("Followings nested select") do
-    Post.select(:id, :description, :author_id, :created_at).where("author_id in (SELECT following_id FROM user_followings WHERE user_id = ?)", user.id)
-          .order(created_at: :desc).offset(offset).limit(limit)
-  end
-  results << benchmark_results[:results]
-  puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
-
-  benchmark_results = AssertPerformance.benchmark_code("Followings inner join") do
-    Post.select(:id, :description, :author_id, :created_at).joins("INNER JOIN user_followings ON posts.author_id = user_followings.following_id").where('user_followings.user_id = ?', user.id).distinct.order(created_at: :desc).offset(offset).limit(limit)
+  benchmark_results = AssertPerformance.benchmark_code("followings_optimized") do
+    following_ids = UserFollowing.where(user_id: user.id).pluck(:following_id)
+    Post.select(:id, :description, :author_id, :created_at, :updated_at).where(author: following_ids).order(created_at: :desc).offset(offset).limit(limit)
   end
   results << benchmark_results[:results]
   puts "#{benchmark_results[:benchmark][:name]} average: #{benchmark_results[:benchmark][:average]} with std deviation of #{benchmark_results[:benchmark][:standard_deviation]} memory #{benchmark_results[:benchmark][:memory]}"
